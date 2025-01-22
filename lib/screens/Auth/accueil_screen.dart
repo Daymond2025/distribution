@@ -166,6 +166,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
   @override
   Widget build(BuildContext context) {
     DateTime timeBackPressed = DateTime.now();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     String salutation;
     if (timeBackPressed.hour >= 0 && timeBackPressed.hour < 12) {
@@ -693,7 +694,10 @@ class _AccueilScreenState extends State<AccueilScreen> {
                                               crossAxisCount: 2,
                                               crossAxisSpacing: 10,
                                               mainAxisSpacing: 10,
-                                              childAspectRatio: 0.60,
+                                              childAspectRatio:
+                                                  screenWidth >= 600
+                                                      ? 1.3
+                                                      : 0.60,
                                               // mainAxisExtent:
                                               //     !_loading ? 280 : 280,
                                             ),

@@ -7,6 +7,8 @@ import 'package:distribution_frontend/models/seller.dart';
 import 'package:distribution_frontend/screens/Auth/produits/click_produit.dart';
 import 'package:distribution_frontend/screens/home_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_util.dart';
+import 'package:distribution_frontend/screens/newscreens/lesvilles/lesvilles_widget.dart';
 import 'package:distribution_frontend/services/commande_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:distribution_frontend/models/city.dart';
@@ -40,6 +42,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
   final TextEditingController _prixController = TextEditingController();
   final TextEditingController _localisationController = TextEditingController();
   final TextEditingController _detailController = TextEditingController();
+  // final TextEditingController _prixVenteController = TextEditingController();
 
   final bool _noCnx = false;
 
@@ -66,6 +69,16 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
   bool _loading = false;
 
   Seller? seller;
+
+  void changeVille(dynamic value) {
+    print("ville ${value}");
+
+    setState(() {
+      // data = results as List<String>;
+      cityId = value.id.toString();
+      _localisationController.text = value.name;
+    });
+  }
 
   Future<Seller?> getSeller() async {
     final prefs = await SharedPreferences.getInstance();
@@ -144,6 +157,48 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
     }
   }
 
+  _showCommunes(List<dynamic> city, List<String> data) async {
+    setState(() {
+      unitPriceDelivery = data[2] == 'true'
+          ? widget.product.delivery.city
+          : widget.product.delivery.noCity;
+
+      if (data.length > 3) {
+        _ambassadorId = int.parse(data[3]);
+        _ambassadorCompany = '${data[4]} ${data[5]}';
+      } else {
+        _ambassadorId = 0;
+        _ambassadorCompany = data[2] == 'true' ? 'Livraison à domicile' : '';
+      }
+
+      onChange(_prixController.text);
+    });
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Padding(
+            padding: MediaQuery.viewInsetsOf(context),
+            child: Container(
+              height: MediaQuery.sizeOf(context).height * 0.8,
+              child: LesvillesWidget(
+                onDataChanged: changeVille,
+                villes: city,
+              ),
+            ),
+          ),
+        );
+      },
+    ).then((value) => safeSetState(() {}));
+  }
+
   void _showMultipleSelect() async {
     List<String> data = [];
     final results = await showDialog(
@@ -152,6 +207,19 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
             items: cities, currentCity: widget.product.shop.city.id));
 
     if (results != null) {
+      if (results[1] == "Abidjan") {
+        _showCommunes(
+            (cities as List)
+                .where((city) => city.name.startsWith('Abidjan-'))
+                .map((city) => City(
+                      id: city.id,
+                      name: city.name.replaceFirst('Abidjan-', ''),
+                      country: city.country,
+                      focalPoints: city.focalPoints,
+                    ))
+                .toList(),
+            results as List<String>);
+      }
       print('results $results');
       setState(() {
         data = results as List<String>;
@@ -1030,31 +1098,34 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                             const SizedBox(
                               height: 8,
                             ),
-                            widget.product.type == 'grossiste'
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: colorwhite,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: TextFormField(
-                                      controller: _prixController,
-                                      keyboardType: TextInputType.phone,
-                                      onChanged: onChange,
-                                      decoration:
-                                          kCmdInputDecoration('Prix de vente'),
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Le champs ne peut pas être vide!';
-                                        } else if (int.parse(value) <
-                                            widget.product.price.min) {
-                                          return 'Le montant doit être suppérieur ou égale à ${widget.product.price.min}';
-                                          // ignore: unrelated_type_equality_checks
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  )
-                                : Container(),
+                            // widget.product.type == 'grossiste'
+                            //     ?
+                            Container(
+                              decoration: BoxDecoration(
+                                color: colorwhite,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextFormField(
+                                controller: _prixController,
+                                keyboardType: TextInputType.phone,
+                                onChanged: onChange,
+                                decoration:
+                                    kCmdInputDecoration('Prix de vente'),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Le champs ne peut pas être vide!';
+                                  } else if (int.parse(value) <
+                                      widget.product.price.min) {
+                                    return 'Le montant doit être suppérieur ou égale à ${widget.product.price.min}';
+                                    // ignore: unrelated_type_equality_checks
+                                  }
+                                  return null;
+                                },
+                              ),
+                            )
+                            // :
+                            // Container()
+                            ,
                             //prix de livraison et total
                             const SizedBox(
                               height: 8,

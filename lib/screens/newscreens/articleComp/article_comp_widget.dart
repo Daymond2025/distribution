@@ -52,7 +52,7 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
