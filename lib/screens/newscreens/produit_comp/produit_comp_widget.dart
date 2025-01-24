@@ -394,51 +394,61 @@ class _ProduitCompWidgetState extends State<ProduitCompWidget> {
                   //   ),
                   // ),
                 ),
-                FFButtonWidget(
-                  onPressed: () async {
-                    print('Button pressed ...');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ClickProduit(
-                          product: widget.produit.product,
-                        ),
-                      ),
-                    );
-                    // await showModalBottomSheet(
-                    //   isScrollControlled: true,
-                    //   backgroundColor: Colors.transparent,
-                    //   enableDrag: false,
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return Padding(
-                    //       padding: MediaQuery.viewInsetsOf(context),
-                    //       child: Container(
-                    //         height: MediaQuery.sizeOf(context).height * 0.9,
-                    //         child: InfocommandeWidget(
-                    //           produit: widget.produit,
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // ).then((value) => safeSetState(() {}));
-                  },
-                  text: 'Commande (2)',
-                  options: FFButtonOptions(
-                    height: 30,
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                    iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                    color: Color(0xFFFF9000),
-                    textStyle: TextStyle(
-                      fontFamily: 'Inter Tight',
-                      color: Colors.white,
-                      fontSize: 12,
-                      letterSpacing: 0.0,
-                    ),
-                    elevation: 0,
-                    borderRadius: BorderRadius.circular(8),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    formatDate(widget.produit.product.createdAt),
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
+                // FFButtonWidget(
+                //   onPressed: () async {
+                //     print('Button pressed ...');
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => ClickProduit(
+                //           product: widget.produit.product,
+                //         ),
+                //       ),
+                //     );
+                //     // await showModalBottomSheet(
+                //     //   isScrollControlled: true,
+                //     //   backgroundColor: Colors.transparent,
+                //     //   enableDrag: false,
+                //     //   context: context,
+                //     //   builder: (context) {
+                //     //     return Padding(
+                //     //       padding: MediaQuery.viewInsetsOf(context),
+                //     //       child: Container(
+                //     //         height: MediaQuery.sizeOf(context).height * 0.9,
+                //     //         child: InfocommandeWidget(
+                //     //           produit: widget.produit,
+                //     //         ),
+                //     //       ),
+                //     //     );
+                //     //   },
+                //     // ).then((value) => safeSetState(() {}));
+                //   },
+                //   text: 'Commande (2)',
+                //   options: FFButtonOptions(
+                //     height: 30,
+                //     padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                //     iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                //     color: Color(0xFFFF9000),
+                //     textStyle: TextStyle(
+                //       fontFamily: 'Inter Tight',
+                //       color: Colors.white,
+                //       fontSize: 12,
+                //       letterSpacing: 0.0,
+                //     ),
+                //     elevation: 0,
+                //     borderRadius: BorderRadius.circular(8),
+                //   ),
+                // ),
               ],
             ),
           ),

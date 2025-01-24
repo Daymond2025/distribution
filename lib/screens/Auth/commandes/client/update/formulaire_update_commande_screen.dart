@@ -151,7 +151,13 @@ class _FormulaireUpdateCommandeScreenState
                 (route) => false)
           });
     } else if (response.error == 'Error') {
+      setState(() {
+        _loading = !_loading;
+      });
     } else {
+      setState(() {
+        _loading = !_loading;
+      });
       errorAlert(response.error.toString());
     }
   }
@@ -219,18 +225,18 @@ class _FormulaireUpdateCommandeScreenState
       _localisationController.text = _order.delivery.city.name;
       _detailController.text = _order.detail ?? '';
 
-      dateTime = DateTime(
-        int.parse(_order.delivery.date.substring(0, 4)),
-        int.parse(_order.delivery.date.substring(5, 7)),
-        int.parse(_order.delivery.date.substring(8, 10)),
-        int.parse(_order.delivery.time.substring(0, 2)),
-        int.parse(_order.delivery.time.substring(3, 5)),
-      );
+      // dateTime = DateTime(
+      //   int.parse(_order.delivery.date.substring(0, 4)),
+      //   int.parse(_order.delivery.date.substring(5, 7)),
+      //   int.parse(_order.delivery.date.substring(8, 10)),
+      //   int.parse(_order.delivery.time.substring(0, 2)),
+      //   int.parse(_order.delivery.time.substring(3, 5)),
+      // );
 
-      _heure =
-          '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-      _date =
-          '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+      // _heure =
+      //     '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+      // _date =
+      //     '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
     });
   }
 
@@ -288,7 +294,7 @@ class _FormulaireUpdateCommandeScreenState
                                   topRight: Radius.circular(6),
                                 ),
                                 child: Image.network(
-                                  _order.items[0].product.images[0].img,
+                                  _order.items[0].product.images[0],
                                   height: 80,
                                   width: 80,
                                 ),
@@ -1070,7 +1076,7 @@ class _FormulaireUpdateCommandeScreenState
                           height: 10,
                         ),
                         Text(
-                          'Commande envoyé',
+                          'Commande envoyée',
                           style: TextStyle(
                             fontSize: 20,
                           ),

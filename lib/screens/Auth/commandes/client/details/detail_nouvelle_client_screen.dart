@@ -1,4 +1,6 @@
 import 'package:distribution_frontend/models/order.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_theme.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:distribution_frontend/constante.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +23,7 @@ class _DetailNouvelleClientScreenState
   void initState() {
     super.initState();
     _order = widget.commande;
+    print("statut de la commande : ${_order.status}");
   }
 
   @override
@@ -32,296 +35,480 @@ class _DetailNouvelleClientScreenState
         ),
         child: Column(
           children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 7, top: 0),
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: colorwhite,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    'Détail de la commande',
-                    style: TextStyle(
-                      fontSize: 17,
+            // Generated code for this commande Widget...
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Color(0x33000000),
+                      offset: Offset(
+                        0,
+                        2,
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                      child: Text(
+                        'INFORMATION DE LA COMMANDE',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    width: 50,
-                    child: const Divider(),
-                  ),
-                  _order.items[0].size != null
-                      ? Container(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                flex: 8,
-                                child: Text(
-                                  'Taille du produit',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Text(_order.items[0].size.toString()),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(),
-                  //couleur
-                  _order.items[0].color != null
-                      ? Container(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                flex: 8,
-                                child: Text(
-                                  'Couleur du produit',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Text(_order.items[0].color ?? ''),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(),
-                  //quantite
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          flex: 8,
-                          child: Text(
-                            'Quantité',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text('${_order.items[0].quantity} pieces'),
-                        ),
-                      ],
+                    Divider(
+                      thickness: 2,
+                      color: const Color.fromARGB(255, 233, 233, 233),
                     ),
-                  ),
-                  //quantite
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          flex: 8,
-                          child: Text(
-                            'Prix unitaire du produit',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                              '${NumberFormat("###,###", 'en_US').format(_order.items[0].price).replaceAll(',', ' ')}  Fr'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //Livraiosn
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 8,
-                          child: Text(
-                            'Livraison ${_order.delivery.city.name}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            '${NumberFormat("###,###", 'en_US').format(_order.items[0].totalFees).replaceAll(',', ' ')}  Fr',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: const Divider(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          flex: 8,
-                          child: Text(
-                            'SOMME TOTAL',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            '${NumberFormat("###,###", 'en_US').format(_order.items[0].total).replaceAll(',', ' ')}  Fr',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: colorBlue,
-                              fontWeight: FontWeight.w500,
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          _order.items[0].color != null
+                              ? Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF7FBFE),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Couleur',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                        Text(
+                                          'Rouge',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Inter',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          _order.items[0].size != null
+                              ? Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF7FBFE),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Taille',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                        Text(
+                                          'Rouge',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Inter',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Quantité',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    '${_order.items[0].quantity} Pièce(s)',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Prix',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    '${NumberFormat("###,###", 'en_US').format(_order.items[0].price).replaceAll(',', ' ')}  Fr',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Livraison ${_order.delivery.city.name}',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    '${NumberFormat("###,###", 'en_US').format(_order.items[0].totalFees).replaceAll(',', ' ')}  Fr',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            thickness: 2,
+                            color: const Color.fromARGB(255, 233, 233, 233),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'A payer',
+                                textAlign: TextAlign.end,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFFFF9700),
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                              Text(
+                                '${NumberFormat("###,###", 'en_US').format(_order.items[0].total).replaceAll(',', ' ')}  Fr',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFFFF9700),
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                'Comission total ${NumberFormat("###,###", 'en_US').format(_order.items[0].orderCommission).replaceAll(',', ' ')} Fr',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Color(0xFFFF9700),
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ].divide(SizedBox(height: 20)),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 7),
-              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 25),
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: colorwhite,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    'Détail de la livraison',
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    width: 50,
-                    child: const Divider(),
-                  ),
-                  //nom & livraison
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Row(
+
+            // Generated code for this livraison Widget...
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Color(0x33000000),
+                      offset: Offset(
+                        0,
+                        2,
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Nom',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text(
-                                _order.client.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                          child: Text(
+                            'INFORMATION DE LIVRAISON',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Livraison',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text(
-                                _order.delivery.city.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  //contact1 & contact2
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Contact 1',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text(
-                                '+225 ${_order.client.phoneNumber}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Divider(
+                      thickness: 2,
+                      color: const Color.fromARGB(255, 233, 233, 233),
                     ),
-                  ),
-                  //contact1 & contact2
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Date de livraiosn',
-                                style: TextStyle(fontSize: 18),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Nom à mettre sur la facture',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF8D8D8D),
+                                          fontSize: 12,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    _order.client.name,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 10)),
                               ),
-                              Text(
-                                _order.delivery.date,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Heure de livraison',
-                                style: TextStyle(fontSize: 18),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Contact',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF8D8D8D),
+                                          fontSize: 12,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    '+225 ${_order.client.phoneNumber}',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 10)),
                               ),
-                              Text(
-                                _order.delivery.time,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Lieu de livraison',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF8D8D8D),
+                                          fontSize: 12,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    _order.delivery.city.name,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 10)),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF7FBFE),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Date de livraison',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          color: Color(0xFF8D8D8D),
+                                          fontSize: 12,
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                  Text(
+                                    '${_order.delivery.date} ${_order.delivery.time}',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 10)),
+                              ),
+                            ),
+                          ),
+                        ].divide(SizedBox(height: 10)),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
@@ -333,6 +520,16 @@ class _DetailNouvelleClientScreenState
               decoration: BoxDecoration(
                 color: colorwhite,
                 borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Color(0x33000000),
+                    offset: Offset(
+                      0,
+                      2,
+                    ),
+                  )
+                ],
               ),
               child: Table(
                 defaultColumnWidth:
@@ -353,10 +550,12 @@ class _DetailNouvelleClientScreenState
                             width: MediaQuery.of(context).size.width - 20,
                             height: 30,
                             child: const Text(
-                              'Autres détails',
+                              'AUTRES DETAILS',
                               textAlign: TextAlign.start,
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.grey),
+                              style: TextStyle(
+                                  // fontSize: 20,
+                                  // color: Colors.grey,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                           Container(

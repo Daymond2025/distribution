@@ -52,6 +52,7 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
 
   bool visualise = false;
   bool voirErreur = false;
+  bool voirPrice = false;
 
   Future<Seller?> getSeller() async {
     final prefs = await SharedPreferences.getInstance();
@@ -95,7 +96,7 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0,
       );
@@ -949,8 +950,8 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                                     ),
                                                               ),
                                                               Text(
-                                                                price
-                                                                    .toString(),
+                                                                formatAmount(
+                                                                    price),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1161,6 +1162,15 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                   ),
                                                 ],
                                               ),
+                                              Visibility(
+                                                  visible: voirPrice,
+                                                  child: Text(
+                                                      "* Veuillez renseigner un prix de vente supérieur au prix actuel !!",
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors.red,
+                                                          fontWeight: FontWeight
+                                                              .bold))),
                                               Divider(
                                                 thickness: 2,
                                                 color: const Color.fromARGB(
@@ -1213,11 +1223,10 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                                           10,
                                                                           0),
                                                               child: Text(
-                                                                widget
+                                                                formatAmount(widget
                                                                     .product
                                                                     .price
-                                                                    .commission
-                                                                    .toString(),
+                                                                    .commission),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1236,7 +1245,7 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                             );
                                                           } else {
                                                             return Text(
-                                                              (widget
+                                                              formatAmount((widget
                                                                           .product
                                                                           .price
                                                                           .commission +
@@ -1244,7 +1253,7 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                                               price) *
                                                                           70 /
                                                                           100))
-                                                                  .toString(),
+                                                                  .round()),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyMedium
@@ -1622,8 +1631,8 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                       ),
                                             ),
                                             Text(
-                                              widget.product.delivery.city
-                                                  .toString(),
+                                              formatAmount(
+                                                  widget.product.delivery.city),
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -1659,8 +1668,8 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                                       ),
                                             ),
                                             Text(
-                                              widget.product.delivery.noCity
-                                                  .toString(),
+                                              formatAmount(widget
+                                                  .product.delivery.noCity),
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -1780,8 +1789,23 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
                                   //   textColor: Colors.white,
                                   //   fontSize: 16.0,
                                   // );
+                                } else if (_model.priceTextController.text ==
+                                    '') {
+                                  setState(() {
+                                    _model.priceTextController.text =
+                                        price.toString();
+                                  });
+
+                                  _submit();
+                                } else if (price >
+                                    int.parse(
+                                        _model.priceTextController.text)) {
+                                  setState(() => voirPrice = true);
                                 } else {
-                                  setState(() => voirErreur = false);
+                                  setState(() {
+                                    voirErreur = false;
+                                    voirPrice = false;
+                                  });
                                   _submit();
                                 }
                               },

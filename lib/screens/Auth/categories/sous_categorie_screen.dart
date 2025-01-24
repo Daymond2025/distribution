@@ -51,6 +51,7 @@ class _SousCategorieScreenState extends State<SousCategorieScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: colorwhite,
       appBar: PreferredSize(
@@ -76,11 +77,12 @@ class _SousCategorieScreenState extends State<SousCategorieScreen> {
               child: GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 12.0,
                   mainAxisSpacing: 12.0,
                   mainAxisExtent: 260,
+                  // childAspectRatio: screenWidth >= 600 ? 1 : 0.60,
                 ),
                 itemCount: 6,
                 itemBuilder: (_, index) {
@@ -88,46 +90,50 @@ class _SousCategorieScreenState extends State<SousCategorieScreen> {
                 },
               ),
             )
-          : SingleChildScrollView(
-              child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(
-                      top: 10, bottom: 10, left: 8, right: 8),
+          : _products.isEmpty
+              ? Center(
+                  child: Text('Aucun produit disponible'),
+                )
+              : SingleChildScrollView(
                   child: Container(
-                    child: GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12.0,
-                        mainAxisSpacing: 12.0,
-                        mainAxisExtent: 277,
-                      ),
-                      itemCount: _products.length,
-                      itemBuilder: (_, index) {
-                        return InkWell(
-                          onTap: () => {},
-                          child: produitsCard(
-                            context,
-                            _products.elementAt(index),
-                            _products.elementAt(index).id,
-                            _products.elementAt(index).name,
-                            _products.elementAt(index).price.price,
-                            _products.elementAt(index).price.normal,
-                            _products.elementAt(index).state.name,
-                            _products.elementAt(index).star,
-                            _products.elementAt(index).images.isEmpty
-                                ? imgProdDefault
-                                : _products.elementAt(index).images[0],
-                            _products.elementAt(index).stock,
-                            _products.elementAt(index).unavailable,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 8, right: 8),
+                      child: Container(
+                        child: GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12.0,
+                            mainAxisSpacing: 12.0,
+                            mainAxisExtent: 277,
                           ),
-                        );
-                      },
-                    ),
-                  )),
-            ),
+                          itemCount: _products.length,
+                          itemBuilder: (_, index) {
+                            return InkWell(
+                              onTap: () => {},
+                              child: produitsCard(
+                                context,
+                                _products.elementAt(index),
+                                _products.elementAt(index).id,
+                                _products.elementAt(index).name,
+                                _products.elementAt(index).price.price,
+                                _products.elementAt(index).price.normal,
+                                _products.elementAt(index).state.name,
+                                _products.elementAt(index).star,
+                                _products.elementAt(index).images.isEmpty
+                                    ? imgProdDefault
+                                    : _products.elementAt(index).images[0],
+                                _products.elementAt(index).stock,
+                                _products.elementAt(index).unavailable,
+                              ),
+                            );
+                          },
+                        ),
+                      )),
+                ),
     );
   }
 }

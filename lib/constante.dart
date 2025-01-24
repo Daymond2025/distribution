@@ -68,7 +68,17 @@ const textSharing =
     '🔥 *Offre spéciale !* \n\n Découvrez notre promotion à prix réduit. Cliquez ici 👇 pour voir les photos et les bonus offert. \n\n';
 
 String formatAmount(int amount) {
-  return NumberFormat("###,###", 'en_US').format(amount).replaceAll(',', ' ');
+  return '${NumberFormat("###,###", 'en_US').format(amount).replaceAll(',', ' ')} Fr';
+}
+
+String formatDate(String dateString) {
+  // Parse la chaîne en DateTime
+  DateTime dateTime = DateTime.parse(dateString);
+
+  // Crée un format personnalisé
+  String formattedDate = DateFormat('dd/MM/yyyy HH\'h\'mm').format(dateTime);
+
+  return formattedDate;
 }
 
 //produit

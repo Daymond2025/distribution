@@ -6,17 +6,17 @@ import 'package:distribution_frontend/models/order.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:http/http.dart' as http;
 
-
-class OrderService{
-
-
+class OrderService {
   Future<ApiResponse> count() async {
     ApiResponse apiResponse = ApiResponse();
     try {
       String token = await getToken();
       final response = await http.get(
         Uri.parse('${baseURL}seller/order-count'),
-        headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
       );
       switch (response.statusCode) {
         case 200:
@@ -48,7 +48,10 @@ class OrderService{
       String token = await getToken();
       final response = await http.get(
         Uri.parse('${baseURL}seller/order?$params'),
-        headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
       );
 
       switch (response.statusCode) {
@@ -79,19 +82,21 @@ class OrderService{
 }
 
 Future<ApiResponse> storeCommandeClient(
-    int id,
-    String cityId,
-    String fullName,
-    String contact,
-    int qte,
-    String date,
-    String hour,
-    String price,
-    int focalPoint,
-    String detail,
-    String size,
-    String color,) async {
+  int id,
+  String cityId,
+  String fullName,
+  String contact,
+  int qte,
+  String date,
+  String hour,
+  String price,
+  int focalPoint,
+  String detail,
+  String size,
+  String color,
+) async {
   ApiResponse apiResponse = ApiResponse();
+  print("prix tapé dans lapi ${price}");
   try {
     String token = await getToken();
     final response =
@@ -99,19 +104,19 @@ Future<ApiResponse> storeCommandeClient(
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: {
-          'person': 'client',
-          'product_id': id.toString(),
-          'city_id': cityId,
-          'name': fullName,
-          'phone_number': contact,
-          'quantity': qte.toString(),
-          'date': date,
-          'time': hour,
-          'focal_point_id':  focalPoint.toString(),
-          'price': price,
-          'detail': detail,
-          'size': size,
-          'color': color,
+      'person': 'client',
+      'product_id': id.toString(),
+      'city_id': cityId,
+      'name': fullName,
+      'phone_number': contact,
+      'quantity': qte.toString(),
+      'date': date,
+      'time': hour,
+      'focal_point_id': focalPoint.toString(),
+      'price': price,
+      'detail': detail,
+      'size': size,
+      'color': color,
     });
 
     print(response.body);
@@ -190,9 +195,11 @@ Future<ApiResponse> updateCommandeClient(
         break;
 
       default:
+        print("ERREUR STATUS CODE ${response.statusCode}");
         apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
+    print('===Erreur == ${e.toString()}');
     apiResponse.error = 'Error';
   }
 

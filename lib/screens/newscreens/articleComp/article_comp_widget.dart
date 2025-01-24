@@ -78,7 +78,7 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
                   child: Image.network(
                     this.widget.article.images[0],
                     width: double.infinity,
-                    height: 129,
+                    height: 128,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -7,6 +7,8 @@ import 'package:distribution_frontend/models/seller.dart';
 import 'package:distribution_frontend/screens/Auth/produits/click_produit.dart';
 import 'package:distribution_frontend/screens/home_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_icon_button.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_theme.dart';
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_util.dart';
 import 'package:distribution_frontend/screens/newscreens/lesvilles/lesvilles_widget.dart';
 import 'package:distribution_frontend/services/commande_service.dart';
@@ -68,6 +70,8 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
 
   bool _loading = false;
 
+  bool offre = false;
+
   Seller? seller;
 
   void changeVille(dynamic value) {
@@ -121,6 +125,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
   }
 
   Future<void> createCommand() async {
+    print('prix tapé ${_prixController.text}');
     ApiResponse response = await storeCommandeClient(
       widget.product.id,
       cityId,
@@ -535,27 +540,35 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                     alignment: Alignment.topLeft,
                                     padding: const EdgeInsets.only(
                                         left: 5, bottom: 5),
-                                    child: RichText(
-                                      textAlign: TextAlign.left,
-                                      text: TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text: 'Prix de vente : ',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: colorblack,
-                                            ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          textAlign: TextAlign.left,
+                                          text: TextSpan(
+                                            children: [
+                                              const TextSpan(
+                                                text: 'Prix de vente : ',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: colorblack,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    'de ${NumberFormat("###,###", 'en_US').format(widget.product.price.min).replaceAll(',', ' ')}  Fr à ${NumberFormat("###,###", 'en_US').format(widget.product.price.max).replaceAll(',', ' ')}  Fr',
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: colorBlue,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          TextSpan(
-                                            text:
-                                                'de ${NumberFormat("###,###", 'en_US').format(widget.product.price.min).replaceAll(',', ' ')}  Fr à ${NumberFormat("###,###", 'en_US').format(widget.product.price.max).replaceAll(',', ' ')}  Fr',
-                                            style: const TextStyle(
-                                              fontSize: 13,
-                                              color: colorBlue,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        // Generated code for this ConditionalBuilder Widget...
+                                      ],
                                     ),
                                   )
                                 : Container(
@@ -1105,22 +1118,269 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                 color: colorwhite,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: TextFormField(
-                                controller: _prixController,
-                                keyboardType: TextInputType.phone,
-                                onChanged: onChange,
-                                decoration:
-                                    kCmdInputDecoration('Prix de vente'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Le champs ne peut pas être vide!';
-                                  } else if (int.parse(value) <
-                                      widget.product.price.min) {
-                                    return 'Le montant doit être suppérieur ou égale à ${widget.product.price.min}';
-                                    // ignore: unrelated_type_equality_checks
-                                  }
-                                  return null;
-                                },
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Builder(builder: (context) {
+                                          if (!offre) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                    'Prix de vente de :',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                  ),
+                                                  Text(
+                                                    formatAmount(int.parse(
+                                                        _prixController.text)),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                  ),
+                                                ].divide(SizedBox(width: 10)),
+                                              ),
+                                            );
+                                          } else {
+                                            return TextFormField(
+                                              controller: _prixController,
+                                              keyboardType: TextInputType.phone,
+                                              onChanged: onChange,
+                                              decoration: kCmdInputDecoration(
+                                                  'Prix de vente'),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Le champs ne peut pas être vide!';
+                                                } else if (int.parse(value) <
+                                                    widget.product.price.min) {
+                                                  return 'Le montant doit être suppérieur ou égale à ${widget.product.price.min}';
+                                                  // ignore: unrelated_type_equality_checks
+                                                }
+                                                return null;
+                                              },
+                                            );
+                                          }
+                                          ;
+                                        }),
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (!offre) {
+                                            return FlutterFlowIconButton(
+                                              borderRadius: 8,
+                                              buttonSize: 40,
+                                              fillColor: Colors.white,
+                                              icon: Icon(
+                                                Icons.add_circle,
+                                                color: Color(0xFFFF9000),
+                                                size: 24,
+                                              ),
+                                              onPressed: () async {
+                                                offre = !offre;
+                                                safeSetState(() {});
+                                              },
+                                            );
+                                          } else {
+                                            return FlutterFlowIconButton(
+                                              borderRadius: 8,
+                                              buttonSize: 40,
+                                              fillColor: Colors.white,
+                                              icon: Icon(
+                                                Icons.close_sharp,
+                                                color: Color(0xFF656565),
+                                                size: 20,
+                                              ),
+                                              onPressed: () async {
+                                                offre = !offre;
+                                                safeSetState(() {});
+                                                print('IconButton pressed ...');
+                                              },
+                                            );
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Divider(
+                                    thickness: 2,
+                                    color: const Color.fromARGB(
+                                        255, 230, 230, 230),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  10, 0, 0, 0),
+                                          child: Text(
+                                            'Votre commission est de',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Inter',
+                                                  fontSize: 12,
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 0, 10, 0),
+                                            child:
+                                                // Generated code for this ConditionalBuilder Widget...
+                                                Builder(
+                                              builder: (context) {
+                                                if (_prixController.text ==
+                                                    widget.product.price.price
+                                                        .toString()) {
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                0, 0, 10, 0),
+                                                    child: Text(
+                                                      formatAmount(widget
+                                                          .product
+                                                          .price
+                                                          .commission),
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily: 'Inter',
+                                                            color: Color(
+                                                                0xFFFF9000),
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  if (_prixController.text ==
+                                                          '' ||
+                                                      widget.product.price
+                                                              .price >=
+                                                          int.parse(
+                                                              _prixController
+                                                                  .text)) {
+                                                    return Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        Text(
+                                                          '0 Fr',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        72,
+                                                                        0),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          '* Inscrivez un montant supérieur à ${formatAmount(widget.product.price.price)}',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontSize: 10,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        72,
+                                                                        0),
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                      formatAmount((widget
+                                                                  .product
+                                                                  .price
+                                                                  .commission +
+                                                              ((int.parse(_prixController
+                                                                          .text) -
+                                                                      widget
+                                                                          .product
+                                                                          .price
+                                                                          .price) *
+                                                                  70 /
+                                                                  100))
+                                                          .round()),
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily: 'Inter',
+                                                            color: Color(
+                                                                0xFFFF9000),
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                             // :
@@ -1328,7 +1588,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                           height: 10,
                         ),
                         Text(
-                          'Commande envoyé',
+                          'Commande envoyée',
                           style: TextStyle(
                             fontSize: 20,
                           ),
