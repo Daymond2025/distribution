@@ -19,6 +19,7 @@ class CloneProductService {
           'Authorization': 'Bearer $token'
         },
       );
+      print("le staut code clone ${response.statusCode}");
       switch (response.statusCode) {
         case 200:
           apiResponse.data = jsonDecode(response.body)['data']
@@ -34,7 +35,7 @@ class CloneProductService {
           apiResponse.error = somethingWentWrong;
       }
     } catch (e) {
-      apiResponse.error = 'serverError';
+      apiResponse.error = e.toString();
     }
 
     return apiResponse;
@@ -75,8 +76,14 @@ class CloneProductService {
     return apiResponse;
   }
 
-  Future<ApiResponse> storeClone(int product, String title, String subTitle,
-      String description, String price, String phoneNumber) async {
+  Future<ApiResponse> storeClone(
+      int product,
+      String title,
+      String subTitle,
+      String description,
+      String price,
+      String phoneNumber,
+      int commission) async {
     ApiResponse apiResponse = ApiResponse();
     try {
       String token = await getToken();
@@ -91,6 +98,7 @@ class CloneProductService {
         'description': description,
         'price': price,
         'phone_number_customer': phoneNumber,
+        'commission': commission.toString()
       });
 
       switch (response.statusCode) {

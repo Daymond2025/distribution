@@ -32,8 +32,8 @@ import 'package:app_settings/app_settings.dart';
 import 'package:http/http.dart' as http;
 
 class ClickProduit extends StatefulWidget {
-  const ClickProduit({super.key, required this.product});
-  final Product product;
+  const ClickProduit({super.key, this.product});
+  final Product? product;
 
   @override
   State<ClickProduit> createState() => _ClickProduitState();
@@ -88,7 +88,7 @@ class _ClickProduitState extends State<ClickProduit> {
       context: context,
       builder: (BuildContext context) => AddNewConversationScreen(
         profile: _profile,
-        idCategory: widget.product.id.toString(),
+        idCategory: widget.product!.id.toString(),
         category: 'product',
       ),
     );
@@ -202,7 +202,7 @@ class _ClickProduitState extends State<ClickProduit> {
 
   //produit favorie
   Future<void> showProduct() async {
-    ApiResponse response = await productService.find(widget.product.id);
+    ApiResponse response = await productService.find(widget.product!.id);
     if (response.error == null) {
       dynamic data = response.data;
       setState(() {
@@ -220,7 +220,7 @@ class _ClickProduitState extends State<ClickProduit> {
 
   Future<void> deleteAddFavorite() async {
     ApiResponse response =
-        await productService.deleteFavorite(widget.product.id);
+        await productService.deleteFavorite(widget.product!.id);
     if (response.error == null) {
       Fluttertoast.showToast(
           msg: '${response.message}',
@@ -272,7 +272,7 @@ class _ClickProduitState extends State<ClickProduit> {
   void initState() {
     super.initState();
 
-    _product = widget.product;
+    _product = widget.product!;
     print('le produit == ${jsonEncode(_product.toJson())}');
     showProduct();
     getProfiles();
@@ -1092,90 +1092,74 @@ class _ClickProduitState extends State<ClickProduit> {
                         )
                       : Container(),
                   //verifier si la couleur du produit a été bien enregistrer pour montré la disponibilité
-                  /* _product.colors.length > 0
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: const EdgeInsets.only(
-                                          top: 5, bottom: 10),
-                                      child: Row(
-                                        children: [
-                                          const Text('Couleur du produit   '),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                150,
-                                            height: 2,
-                                            color: Colors.black26,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              _product.colors.length > 0
-                                  ? Container(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 15,
-                                          left: 10,
-                                          right: 10,
-                                          top: 10),
-                                      child: GridView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 4,
-                                          crossAxisSpacing: 25.0,
-                                          mainAxisSpacing: 10.0,
-                                          mainAxisExtent: 30,
-                                        ),
-                                        itemCount:
-                                            _product.colors.length,
-                                        itemBuilder: (_, index) {
-                                          return Container(
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: colorfond,
-                                              borderRadius:
-                                                  BorderRadius.circular(24.0),
-                                            ),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: double.infinity,
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: colorfond,
-                                                ),
-                                                color: Color(int.parse(
-                                                    _product.colors
-                                                        [index].color)),
-                                                borderRadius:
-                                                    BorderRadius.circular(24.0),
-                                              ),
-                                              child: Text(
-                                                _product.colors
-                                                        [index].name
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color:
-                                                      _product.colors
-                                                                      [index]
-                                                                  .name ==
-                                                              'Blanc'
-                                                          ? colorblack
-                                                          : colorwhite,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : Container(),*/
+                  _product.colors.length > 0
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.only(top: 5, bottom: 10),
+                          child: Row(
+                            children: [
+                              const Text('Couleur du produit   '),
+                              Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width - 200,
+                                height: 2,
+                                color: Colors.black26,
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  _product.colors.length > 0
+                      ? Container(
+                          padding: const EdgeInsets.only(
+                              bottom: 15, left: 5, right: 10, top: 10),
+                          child: GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 25.0,
+                              mainAxisSpacing: 10.0,
+                              mainAxisExtent: 30,
+                            ),
+                            itemCount: _product.colors.length,
+                            itemBuilder: (_, index) {
+                              return Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: colorfond,
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: colorfond,
+                                    ),
+                                    color: Color(int.parse((_product
+                                            .colors[index]["value"] as String)
+                                        .replaceFirst("#", "0xFF"))),
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                  child: Text(
+                                    _product.colors[index]["name"],
+                                    style: TextStyle(
+                                      color: _product.colors[index]["name"] ==
+                                              'Blanc'
+                                          ? colorblack
+                                          : colorwhite,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Container(),
 
                   //Caracteristique
                   Container(

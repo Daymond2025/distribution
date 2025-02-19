@@ -58,6 +58,7 @@ class _CloneScreenState extends State<CloneScreen> {
                 (route) => false)
           });
     } else {
+      print("le statut ${response.error}");
       setState(() {
         _noCnx = true;
       });
@@ -538,79 +539,83 @@ class _CloneScreenState extends State<CloneScreen> {
   }
 
   Stack cardClone(CloneProduct clone) {
-    return Stack(
-      children: [
-        Card(
-          elevation: 0,
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          color: colorwhite, // Fond blanc pour un design épuré
-          child: InkWell(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProductCloneScreen(
-                  clone: clone,
+    if (clone.product != null) {
+      return Stack(
+        children: [
+          Card(
+            elevation: 0,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            color: colorwhite, // Fond blanc pour un design épuré
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductCloneScreen(
+                    clone: clone,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        clone.product!.images[0],
+                        height: 120,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            clone.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            maxLines: 2,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "${clone.price} CFA",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      clone.product.images[0],
-                      height: 120,
-                      width: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          clone.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          maxLines: 2,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${clone.price} CFA",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          ),
+          Positioned(
+            right: 10,
+            top: 10,
+            child: IconButton(
+              icon: const Icon(Icons.delete),
+              color: Colors.red,
+              onPressed: () {
+                deleteClone(clone.id);
+              },
             ),
           ),
-        ),
-        Positioned(
-          right: 10,
-          top: 10,
-          child: IconButton(
-            icon: const Icon(Icons.delete),
-            color: Colors.red,
-            onPressed: () {
-              deleteClone(clone.id);
-            },
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Stack();
+    }
   }
 }

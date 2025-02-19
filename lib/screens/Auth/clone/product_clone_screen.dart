@@ -42,7 +42,7 @@ class ProductCloneScreen extends StatelessWidget {
             children: [
               // Image du produit
               Image.network(
-                clone.product.images[0],
+                clone.product!.images[0],
                 width: double.infinity,
                 height: 250,
                 fit: BoxFit.cover,
@@ -93,14 +93,14 @@ class ProductCloneScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "Livraison ${clone.product.shop.city.name}: ${clone.product.delivery.city} CFA - Hors ${clone.product.shop.city.name}: ${clone.product.delivery.noCity} CFA",
+                "Livraison ${clone.product!.shop.city.name}: ${clone.product!.delivery.city} CFA - Hors ${clone.product!.shop.city.name}: ${clone.product!.delivery.noCity} CFA",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
 
               // Condition du produit
               Text(
-                "État du produit: ${clone.product.state.name.toUpperCase()}",
+                "État du produit: ${clone.product!.state.name.toUpperCase()}",
                 style: const TextStyle(fontSize: 16, color: Colors.orange),
               ),
               const SizedBox(height: 16),

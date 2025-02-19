@@ -10,6 +10,7 @@ class Order {
   final int stars;
   final String status;
   final int returned;
+  final int commission_applied;
 
   final Seller seller;
   final Client client;
@@ -39,6 +40,7 @@ class Order {
     required this.person,
     required this.reference,
     this.detail,
+    required this.commission_applied,
     required this.stars,
     required this.status,
     required this.returned,
@@ -63,12 +65,23 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
+    // print("==delivery ${json['delivery']}");
+    // if (json['delivery'] == null) {
+    //   print("delivery est nul");
+    // }
+
+    print("===========order ${json['id']} ===========");
+    // if (json['items'] == null) {
+    //   print("======= items est nul");
+    // }
+
     return Order(
       id: json['id'],
       person: json['person'],
       reference: json['reference'],
       detail: json['detail'],
       stars: json['stars'],
+      commission_applied: json['commission_applied'],
       status: json['status'],
       returned: json['returned'] ?? '',
       seller: Seller.fromJson(json['seller']),
@@ -114,7 +127,15 @@ class Order {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'commission_applied': commission_applied,
       'items': items.map((e) => e.toJson()).toList(),
+      'canceled': canceled,
+      'received': received,
+      'validated': validated,
+      'postponed': postponed,
+      'pending': pending,
+      'inProgress': inProgress,
+      'confirmed': confirmed,
     };
   }
 }
@@ -131,11 +152,12 @@ class OrderProduct {
 
   final String status;
 
-  final int percentage;
+  final int? percentage;
   final int orderCommission;
   final int sellerCommission;
   final int recruiterCommission;
-
+  final int commission;
+  final int commission_initiale;
   //final Payment? payment;
   final OrderStatusDetail? canceled;
   final OrderStatusDetail? validated;
@@ -149,6 +171,9 @@ class OrderProduct {
     return {
       'reference': reference,
       'price': price,
+      'quantity': quantity,
+      'commission': commission,
+      'commission_initiale': commission_initiale,
     };
   }
 
@@ -156,13 +181,15 @@ class OrderProduct {
     required this.reference,
     required this.star,
     required this.price,
+    required this.commission,
+    required this.commission_initiale,
     required this.quantity,
     required this.fees,
     this.size,
     this.color,
     required this.product,
     required this.status,
-    required this.percentage,
+    this.percentage,
     required this.orderCommission,
     required this.sellerCommission,
     required this.recruiterCommission,
@@ -176,6 +203,7 @@ class OrderProduct {
   });
 
   factory OrderProduct.fromJson(Map<String, dynamic> json) {
+    // print("=========order product=====");
     return OrderProduct(
       reference: json['reference'],
       star: json['star'] ?? 0,
@@ -184,6 +212,8 @@ class OrderProduct {
       fees: json['fees'],
       size: json['size'],
       color: json['color'],
+      commission: json['commission'],
+      commission_initiale: json['commission_initiale'],
       product: Product.fromJson(json['product']),
       status: json['status'],
       percentage: json['percentage'] ?? 0,
@@ -239,6 +269,10 @@ class Delivery {
   });
 
   factory Delivery.fromJson(Map<String, dynamic> json) {
+    print("===========delivery===========");
+    // if (json['city'] == null) {
+    //   print("city est nul");
+    // }
     return Delivery(
       date: json['date'],
       time: json['time'],
@@ -284,5 +318,9 @@ class OrderStatusDetail {
       date: json['date'],
       time: json['time'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'reason': reason, 'date': date, 'time': time};
   }
 }

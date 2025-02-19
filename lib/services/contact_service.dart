@@ -6,7 +6,6 @@ import 'package:distribution_frontend/models/phone_number.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:http/http.dart' as http;
 
-
 Future<ApiResponse> getContacts() async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -54,7 +53,7 @@ Future<ApiResponse> deleteContact(int id) async {
       case 200:
         apiResponse.message = jsonDecode(response.body)['message'];
         break;
-      
+
       case 403:
         apiResponse.error = jsonDecode(response.body)['message'];
         break;
@@ -77,8 +76,8 @@ Future<ApiResponse> createContact(String numero, String operateur) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http
-        .post(Uri.parse('${baseURL}seller/phone_number'), headers: {
+    final response =
+        await http.post(Uri.parse('${baseURL}seller/phone_number'), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: {
@@ -115,18 +114,18 @@ Future<ApiResponse> storeTransactionRetrait(
 ) async {
   ApiResponse apiResponse = ApiResponse();
   try {
+    print('numero $numero , operateur $operateur , montant $montant');
     String token = await getToken();
-    final response = await http.post(
-        Uri.parse('${baseURL}seller/payment/withdrawal'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-        body: {
-          'phone_number': numero,
-          'operator': operateur,
-          'amount': montant,
-        });
+    final response = await http
+        .post(Uri.parse('${baseURL}seller/payment/withdrawal'), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'phone_number': numero,
+      'operator': operateur,
+      'amount': montant,
+    });
+    print('le status code == ${response.statusCode}');
 
     switch (response.statusCode) {
       case 200:
@@ -145,6 +144,8 @@ Future<ApiResponse> storeTransactionRetrait(
         break;
 
       default:
+        var message = jsonDecode(response.body)['message'];
+        print('la reponse == $message');
         apiResponse.error = somethingWentWrong;
     }
   } catch (e) {

@@ -137,7 +137,7 @@ class _AnnuleNouvelleComandeClientScreenState
                           height: 10,
                         ),
                         Text(
-                          'Commande envoyée',
+                          'Commande annulée',
                           style: TextStyle(
                             fontSize: 20,
                           ),

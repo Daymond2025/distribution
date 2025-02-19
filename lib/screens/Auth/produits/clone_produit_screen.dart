@@ -45,7 +45,8 @@ class _CloneProduitScreenState extends State<CloneProduitScreen> {
         _soustitreController.text,
         _descriptionController.text,
         _prixController.text,
-        _contactController.text);
+        _contactController.text,
+        int.parse(_prixController.text));
     AlertComponent().endLoading();
 
     if (response.error == null) {

@@ -65,7 +65,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
         cityName = ci.name;
       });
 
-      if (ci.focalPoints.isEmpty) {
+      if (ci.focalPoints!.isEmpty) {
         _submit();
       }
     }
@@ -143,7 +143,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                                     bottom: BorderSide(
                                       width: 2,
                                       color: cityId == city.id &&
-                                              city.focalPoints.isNotEmpty
+                                              city.focalPoints!.isNotEmpty
                                           ? const Color.fromARGB(
                                               115, 158, 158, 158)
                                           : Colors.white,
@@ -166,11 +166,11 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                                 color: const Color.fromARGB(85, 158, 158, 158),
                                 borderRadius: BorderRadius.circular(24),
                               ),
-                              child: Text('${city.focalPoints.length}'),
+                              child: Text('${city.focalPoints!.length}'),
                             )
                           ],
                         ),
-                        cityId == city.id && city.focalPoints.isNotEmpty
+                        cityId == city.id && city.focalPoints!.isNotEmpty
                             ? Container(
                                 padding: const EdgeInsets.only(
                                     top: 8, left: 8, right: 8),
@@ -178,7 +178,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                                 color: const Color.fromRGBO(245, 246, 251, 1),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: city.focalPoints
+                                  children: city.focalPoints!
                                       .map((ambassador) =>
                                           kAmbassador(ambassador))
                                       .toList(),
@@ -213,7 +213,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                                       bottom: BorderSide(
                                         width: 2,
                                         color: cityId == city.id &&
-                                                city.focalPoints.isNotEmpty
+                                                city.focalPoints!.isNotEmpty
                                             ? const Color.fromARGB(
                                                 115, 158, 158, 158)
                                             : Colors.white,
@@ -235,7 +235,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                             ],
                           ),
                         ),
-                        cityId == city.id && city.focalPoints.isNotEmpty
+                        cityId == city.id && city.focalPoints!.isNotEmpty
                             ? Container(
                                 padding: const EdgeInsets.only(
                                     top: 8, left: 8, right: 8),
@@ -243,7 +243,7 @@ class _SelectAmbassadorState extends State<SelectAmbassador> {
                                 color: const Color.fromRGBO(245, 246, 251, 1),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: city.focalPoints
+                                  children: city.focalPoints!
                                       .map((ambassador) =>
                                           kAmbassador(ambassador))
                                       .toList(),

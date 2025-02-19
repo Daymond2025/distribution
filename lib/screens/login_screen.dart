@@ -9,6 +9,7 @@ import 'package:distribution_frontend/screens/register_screen.dart';
 import 'package:distribution_frontend/services/country_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _phoneController = TextEditingController();
 
+  String signature = '';
+
   void changePays(Country value) {
     setState(() {
       _selectedCountry = value.name;
@@ -33,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    super.dispose();
+  }
+
+  @override
   void _showCountryDialog() async {
     showDialog(
       context: context,
@@ -86,11 +96,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> sendSms() async {
     // Numéro et mot de passe pour Apple
-
+    signature = await SmsAutoFill().getAppSignature;
+    print("la signature : $signature");
     // Processus normal pour les autres utilisateurs
     AlertComponent().loading();
-    ApiResponse response =
-        await userService.login('$_countryPrefix${_phoneController.text}');
+    ApiResponse response = await userService.login(
+        '$_countryPrefix${_phoneController.text}', signature);
 
     if (response.error == null) {
       dynamic data = response.data;
@@ -111,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
       AlertComponent().endLoading();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${response.error}'),
+          content: Text('Erreur lors de la connexion , veuillez réessayer'),
           behavior: SnackBarBehavior.floating,
         ),
       );

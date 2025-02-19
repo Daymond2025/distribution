@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:distribution_frontend/api_response.dart';
 import 'package:distribution_frontend/constante.dart';
+import 'package:distribution_frontend/models/retraits.dart';
 import 'package:distribution_frontend/models/transaction.dart';
 import 'package:distribution_frontend/models/wallet.dart';
 import 'package:distribution_frontend/screens/Auth/portefeuille/detail_transaction_portefeuille_screen.dart';
 import 'package:distribution_frontend/screens/Auth/portefeuille/portefeuille_retrait_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
+import 'package:distribution_frontend/screens/newscreens/flutter_flow_theme.dart';
+import 'package:distribution_frontend/services/retraits_service.dart';
 import 'package:distribution_frontend/services/transaction_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -15,6 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../newscreens/listeRetraits/list_retraits_widget.dart';
+
 class PortefeuilleScreen extends StatefulWidget {
   const PortefeuilleScreen({super.key});
 
@@ -24,12 +31,16 @@ class PortefeuilleScreen extends StatefulWidget {
 
 class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
   WalletService walletService = WalletService();
+  RetraitsService retraitService = RetraitsService();
   late Wallet _wallet;
   List<Transaction> _transactions = [];
   bool _loading = true;
 
   bool _noCnx = false;
   int somme = 0;
+
+  bool tabactive = false;
+  List<Retrait> lesRetraits = [];
 
   //portefeuille
   Future<void> wallet() async {
@@ -44,6 +55,8 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
           _transactions = (data['transactions'] as List)
               .map((item) => Transaction.fromJson(item))
               .toList();
+          print(
+              "== transactions ${jsonEncode(_transactions.map((transaction) => transaction.toJson()).toList())}");
         } else {
           _transactions = [];
         }
@@ -60,6 +73,18 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
       setState(() {
         _noCnx = true;
       });
+    }
+  }
+
+  //liste Retraits
+  Future<void> listRetraits() async {
+    ApiResponse response = await retraitService.getRetraits(0, 10, null);
+    if (response.error == null) {
+      setState(() {
+        lesRetraits = response.data as List<Retrait>;
+      });
+    } else {
+      print('Petit soucis liste retraits == ${response.error}');
     }
   }
 
@@ -107,6 +132,7 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
     super.initState();
     initializeDateFormatting('fr_FR', null);
     wallet();
+    listRetraits();
   }
 
   @override
@@ -443,56 +469,272 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
               ),
               child: !_loading
                   ? _transactions.isNotEmpty
-                      ? GroupedListView<dynamic, String>(
-                          elements: _transactions,
-                          groupBy: (element) =>
-                              element['updatedAt'].substring(0, 10),
-                          order: GroupedListOrder.DESC,
-                          useStickyGroupSeparators: false,
-                          groupSeparatorBuilder: (String groupByValue) {
-                            DateTime date = DateTime.parse(groupByValue);
-                            String formattedDate =
-                                DateFormat.yMMMMEEEEd('fr_FR').format(date);
-
-                            return Container(
-                              padding: const EdgeInsets.only(bottom: 5, top: 5),
+                      ? Column(
+                          children: [
+                            // Generated code for this Row Widget...
+                            // Padding(
+                            //   padding: EdgeInsets.all(20),
+                            //   child: Row(
+                            //     mainAxisSize: MainAxisSize.max,
+                            //     mainAxisAlignment:
+                            //         MainAxisAlignment.spaceEvenly,
+                            //     children: [
+                            //       InkWell(
+                            //         onTap: () {
+                            //           setState(() {
+                            //             tabactive = "Commissions";
+                            //           });
+                            //         },
+                            //         child: Container(
+                            //           width: 150,
+                            //           decoration: BoxDecoration(
+                            //             color: tabactive == "Commissions"
+                            //                 ? Color(0xFFFFA11E)
+                            //                 : Colors.transparent,
+                            //             borderRadius: BorderRadius.circular(20),
+                            //             border: Border.all(
+                            //               color: tabactive != "Commissions"
+                            //                   ? FlutterFlowTheme.of(context)
+                            //                       .secondaryText
+                            //                   : Colors.transparent,
+                            //             ),
+                            //           ),
+                            //           alignment: AlignmentDirectional(0, 0),
+                            //           child: Padding(
+                            //             padding: EdgeInsets.all(10),
+                            //             child: Text(
+                            //               'Commissions',
+                            //               style: FlutterFlowTheme.of(context)
+                            //                   .bodyMedium
+                            //                   .override(
+                            //                     fontFamily: 'Inter',
+                            //                     color:
+                            //                         tabactive == "Commissions"
+                            //                             ? Colors.white
+                            //                             : Colors.grey,
+                            //                     letterSpacing: 0.0,
+                            //                     fontWeight: FontWeight.bold,
+                            //                   ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       SizedBox(
+                            //         height: 50,
+                            //         child: VerticalDivider(
+                            //           thickness: 2,
+                            //           color: const Color.fromARGB(
+                            //               255, 221, 221, 221),
+                            //         ),
+                            //       ),
+                            //       InkWell(
+                            //         onTap: () {
+                            //           setState(() {
+                            //             tabactive = "Retraits";
+                            //           });
+                            //         },
+                            //         child: Container(
+                            //           width: 150,
+                            //           decoration: BoxDecoration(
+                            //             color: tabactive != "Commissions"
+                            //                 ? Color(0xFFFFA11E)
+                            //                 : Colors.transparent,
+                            //             borderRadius: BorderRadius.circular(20),
+                            //             border: Border.all(
+                            //               color: tabactive != "Commissions"
+                            //                   ? Colors.transparent
+                            //                   : FlutterFlowTheme.of(context)
+                            //                       .secondaryText,
+                            //             ),
+                            //           ),
+                            //           alignment: AlignmentDirectional(0, 0),
+                            //           child: Padding(
+                            //             padding: EdgeInsets.all(10),
+                            //             child: Text(
+                            //               'Retraits',
+                            //               style: FlutterFlowTheme.of(context)
+                            //                   .bodyMedium
+                            //                   .override(
+                            //                     fontFamily: 'Inter',
+                            //                     color:
+                            //                         tabactive != "Commissions"
+                            //                             ? Colors.white
+                            //                             : Colors.grey,
+                            //                     letterSpacing: 0.0,
+                            //                     fontWeight: FontWeight.bold,
+                            //                   ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // Positioned(
+                            //   right: 0,
+                            //   left: 0,
+                            // child:
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Row(
+                                spacing: 4,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor:
+                                        tabactive ? Colors.grey : Colors.blue,
+                                  ),
+                                  CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor:
+                                        tabactive ? Colors.blue : Colors.grey,
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    formattedDate.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text(
-                                    nbbyDate(groupByValue).toString(),
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                    ),
-                                  )
+                                  Text(tabactive ? "Retraits" : "Commissions",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey)),
+                                  // Icon(Icons.arrow_circle_right_rounded,
+                                  //     color: Colors.blue)
                                 ],
                               ),
-                            );
-                          },
-                          itemBuilder: (context, element) {
-                            return kCardTransaction(
-                                element,
-                                element['type'] == 'withdrawal'
-                                    ? element['operator'] == 'Mtn'
-                                        ? logoMtn
-                                        : element['operator'] == 'Moov'
-                                            ? logoMoov
-                                            : element['operator'] == 'Orange'
-                                                ? logoOrange
-                                                : logoWave
-                                    : logoWave);
-                          })
+                            ),
+                            // ),
+                            Expanded(
+                              child: PageView(
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    tabactive = !tabactive;
+                                  });
+                                },
+                                children: [
+                                  GroupedListView<dynamic, String>(
+                                      elements: _transactions,
+                                      groupBy: (element) =>
+                                          element?.updatedAt.substring(0, 10),
+                                      order: GroupedListOrder.DESC,
+                                      useStickyGroupSeparators: false,
+                                      groupSeparatorBuilder:
+                                          (String groupByValue) {
+                                        DateTime date =
+                                            DateTime.parse(groupByValue);
+                                        String formattedDate =
+                                            DateFormat.yMMMMEEEEd('fr_FR')
+                                                .format(date);
+
+                                        return Container(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5, top: 5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                formattedDate.toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                              Text(
+                                                nbbyDate(groupByValue)
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      itemBuilder: (context, element) {
+                                        return kCardTransaction(
+                                            element,
+                                            element.order?.items[0].product
+                                                ?.images[0]);
+                                      }),
+                                  ListRetraitsWidget(retraits: lesRetraits),
+                                ],
+                              ),
+                            ),
+                            // Expanded(
+                            //     child: tabactive == "Commissions"
+                            //         ?
+                            //         GroupedListView<dynamic, String>(
+                            //             elements: _transactions,
+                            //             groupBy: (element) =>
+                            //                 element?.updatedAt.substring(0, 10),
+                            //             order: GroupedListOrder.DESC,
+                            //             useStickyGroupSeparators: false,
+                            //             groupSeparatorBuilder:
+                            //                 (String groupByValue) {
+                            //               DateTime date =
+                            //                   DateTime.parse(groupByValue);
+                            //               String formattedDate =
+                            //                   DateFormat.yMMMMEEEEd('fr_FR')
+                            //                       .format(date);
+
+                            //               return Container(
+                            //                 padding: const EdgeInsets.only(
+                            //                     bottom: 5, top: 5),
+                            //                 child: Row(
+                            //                   mainAxisAlignment:
+                            //                       MainAxisAlignment
+                            //                           .spaceBetween,
+                            //                   children: [
+                            //                     Text(
+                            //                       formattedDate.toString(),
+                            //                       style: const TextStyle(
+                            //                         color: Colors.black87,
+                            //                         fontWeight: FontWeight.w400,
+                            //                         fontSize: 16,
+                            //                       ),
+                            //                     ),
+                            //                     Text(
+                            //                       nbbyDate(groupByValue)
+                            //                           .toString(),
+                            //                       style: const TextStyle(
+                            //                         color: Colors.black87,
+                            //                         fontWeight: FontWeight.w400,
+                            //                         fontSize: 16,
+                            //                       ),
+                            //                     )
+                            //                   ],
+                            //                 ),
+                            //               );
+                            //             },
+                            //             itemBuilder: (context, element) {
+                            //               return kCardTransaction(
+                            //                   element,
+                            //                   element?.type == 'withdrawal'
+                            //                       ? element?.operator == 'Mtn'
+                            //                           ? logoMtn
+                            //                           : element?.operator ==
+                            //                                   'Moov'
+                            //                               ? logoMoov
+                            //                               : element.operator ==
+                            //                                       'Orange'
+                            //                                   ? logoOrange
+                            //                                   : logoWave
+                            //                       : logoWave);
+                            //             })
+
+                            //         : ListRetraitsWidget(
+                            //             retraits: lesRetraits)),
+                          ],
+                        )
                       : Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -532,6 +774,8 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () {
+          // print(
+          //     "=la transaction ${transaction.order?.items[0].product?.images[0]}");
           showUserTransaction(transaction);
         },
         child: Container(

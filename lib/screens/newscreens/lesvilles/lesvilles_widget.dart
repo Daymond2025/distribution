@@ -18,7 +18,7 @@ class LesvillesWidget extends StatefulWidget {
     required this.onDataChanged,
   });
 
-  final List<dynamic>? villes;
+  final List<City>? villes;
   final Function(dynamic) onDataChanged;
 
   @override
@@ -145,7 +145,7 @@ class _LesvillesWidgetState extends State<LesvillesWidget> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                             child: Text(
                               villeItem.name
                               // getJsonField(

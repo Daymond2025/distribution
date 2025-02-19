@@ -6,6 +6,7 @@ import 'package:distribution_frontend/screens/home_screen.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class ConfirmConnexionScreen extends StatefulWidget {
   const ConfirmConnexionScreen(
@@ -28,46 +29,61 @@ class ConfirmConnexionScreen extends StatefulWidget {
 }
 
 class _ConfirmConnexionScreenState extends State<ConfirmConnexionScreen> {
-  final List<TextEditingController> _otpControllers =
-      List.generate(5, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(5, (index) => FocusNode());
+  // final List<TextEditingController> _otpControllers =
+  //     List.generate(5, (index) => TextEditingController());
+  // final List<FocusNode> _focusNodes = List.generate(5, (index) => FocusNode());
   bool isButtonEnabled = false;
+
+  final TextEditingController _otpControllers = TextEditingController();
+
+  String _code = "";
 
   @override
   void dispose() {
-    for (var controller in _otpControllers) {
-      controller.dispose();
-    }
-    for (var focusNode in _focusNodes) {
-      focusNode.dispose();
-    }
+    // for (var controller in _otpControllers) {
+    //   controller.dispose();
+    // }
+    // for (var focusNode in _focusNodes) {
+    //   focusNode.dispose();
+    // }
+    SmsAutoFill().unregisterListener();
     super.dispose();
   }
 
+  void initState() {
+    super.initState();
+    listenOtp();
+  }
+
+  listenOtp() async {
+    await SmsAutoFill().listenForCode();
+  }
+
   void _handleOtpInput(int index, String value) {
-    if (value.isNotEmpty) {
-      if (index < 4) {
-        _focusNodes[index + 1].requestFocus();
-      } else {
-        _focusNodes[index].unfocus();
-      }
-    } else if (value.isEmpty && index > 0) {
-      _focusNodes[index - 1].requestFocus();
-    }
-    _checkIfButtonShouldBeEnabled();
+    // if (value.isNotEmpty) {
+    //   if (index < 4) {
+    //     _focusNodes[index + 1].requestFocus();
+    //   } else {
+    //     _focusNodes[index].unfocus();
+    //   }
+    // } else if (value.isEmpty && index > 0) {
+    //   _focusNodes[index - 1].requestFocus();
+    // }
+    // _checkIfButtonShouldBeEnabled();
   }
 
   void _checkIfButtonShouldBeEnabled() {
-    bool allFilled =
-        _otpControllers.every((controller) => controller.text.isNotEmpty);
-    setState(() {
-      isButtonEnabled = allFilled;
-    });
+    // bool allFilled =
+    //     _otpControllers.every((controller) => controller.text.isNotEmpty);
+    // setState(() {
+    //   isButtonEnabled = allFilled;
+    // });
   }
 
   void _confirmOtp() {
-    String otpCode =
-        _otpControllers.map((controller) => controller.text).join();
+    String otpCode = _otpControllers.text;
+    // .
+    // .map((controller) => controller.text).join();
     submit(otpCode);
   }
 
@@ -89,7 +105,7 @@ class _ConfirmConnexionScreenState extends State<ConfirmConnexionScreen> {
       AlertComponent().endLoading();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${response.error}'),
+          content: Text('Erreur lors de la confirmation , veuillez réessayer'),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -157,30 +173,53 @@ class _ConfirmConnexionScreenState extends State<ConfirmConnexionScreen> {
                       color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(5, (index) {
-                        return SizedBox(
-                          width: 40,
-                          child: TextField(
-                            controller: _otpControllers[index],
-                            focusNode: _focusNodes[index],
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            decoration: const InputDecoration(
-                              counterText: '',
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              _handleOtpInput(index, value);
-                            },
-                          ),
-                        );
-                      }),
+                    child: PinFieldAutoFill(
+                      codeLength: 5,
+                      autoFocus: true,
+                      controller: _otpControllers,
+                      decoration: UnderlineDecoration(
+                        textStyle:
+                            const TextStyle(fontSize: 20, color: Colors.black),
+                        colorBuilder:
+                            FixedColorBuilder(Colors.black.withOpacity(0.3)),
+                      ),
+                      currentCode: _code,
+                      onCodeSubmitted: (code) {},
+                      onCodeChanged: (code) {
+                        if (code!.length == 5) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+
+                          setState(() {
+                            _code = code;
+                            isButtonEnabled = true;
+                          });
+                        }
+                      },
                     ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: List.generate(5, (index) {
+                    //     return SizedBox(
+                    //       width: 40,
+                    //       child: TextField(
+                    //         controller: _otpControllers[index],
+                    //         focusNode: _focusNodes[index],
+                    //         textAlign: TextAlign.center,
+                    //         keyboardType: TextInputType.number,
+                    //         maxLength: 1,
+                    //         decoration: const InputDecoration(
+                    //           counterText: '',
+                    //           border: UnderlineInputBorder(
+                    //             borderSide: BorderSide(color: Colors.grey),
+                    //           ),
+                    //         ),
+                    //         onChanged: (value) {
+                    //           _handleOtpInput(index, value);
+                    //         },
+                    //       ),
+                    //     );
+                    //   }),
+                    // ),
                   ),
                   const SizedBox(height: 60),
                   Row(

@@ -136,6 +136,14 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
       _heure,
       _prixController.text,
       _ambassadorId,
+      _prixController.text == widget.product.price.price.toString()
+          ? widget.product.price.commission
+          : (widget.product.price.commission +
+                  ((int.parse(_prixController.text) -
+                          widget.product.price.price) *
+                      70 /
+                      100))
+              .round(),
       _detailController.text,
       taille,
       couleur,
@@ -162,7 +170,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
     }
   }
 
-  _showCommunes(List<dynamic> city, List<String> data) async {
+  _showCommunes(List<City> city, List<String> data) async {
     setState(() {
       unitPriceDelivery = data[2] == 'true'
           ? widget.product.delivery.city
@@ -739,7 +747,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                     ),
                                   )
                                 : Container(),
-                            /* opencouleur
+                            opencouleur
                                 ? Container(
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
@@ -747,9 +755,11 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     width: MediaQuery.of(context).size.width,
+                                    height: 100,
                                     margin: const EdgeInsets.only(top: 8),
                                     child: widget.product.colors.isNotEmpty
                                         ? Container(
+                                            // height: 60,
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 10, horizontal: 20),
                                             child: GridView.builder(
@@ -761,16 +771,18 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                                 crossAxisCount: 3,
                                                 crossAxisSpacing: 12.0,
                                                 mainAxisSpacing: 12.0,
-                                                mainAxisExtent: 20,
+                                                mainAxisExtent: 25,
                                               ),
-                                              itemCount: widget.product.colors.length,
+                                              itemCount:
+                                                  widget.product.colors.length,
                                               itemBuilder: (_, index) {
                                                 return InkWell(
                                                   onTap: () {
                                                     setState(() {
-                                                      couleur = widget.product.colors
+                                                      couleur = widget
+                                                          .product.colors
                                                           .elementAt(
-                                                              index)['nom'];
+                                                              index)['name'];
                                                     });
                                                   },
                                                   child: Container(
@@ -780,12 +792,13 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                                             widget.product.colors
                                                                     .elementAt(
                                                                         index)[
-                                                                'nom']
+                                                                'name']
                                                         ? Colors.amber
                                                         : Colors.transparent,
                                                     child: Text(
-                                                      widget.product.colors.elementAt(
-                                                          index)['nom'],
+                                                      widget.product.colors
+                                                          .elementAt(
+                                                              index)['name'],
                                                       style: const TextStyle(
                                                           fontSize: 20),
                                                     ),
@@ -801,7 +814,7 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
                                                 'Pas de taille disponible'),
                                           ),
                                   )
-                                : Container(),*/
+                                : Container(),
                             const SizedBox(
                               height: 8,
                             ),

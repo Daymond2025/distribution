@@ -6,6 +6,7 @@ import 'package:distribution_frontend/screens/home_screen.dart';
 import 'package:distribution_frontend/screens/loading_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
 import 'package:distribution_frontend/services/contact_service.dart';
+import 'package:distribution_frontend/services/retraits_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -32,10 +33,11 @@ class _ClickNumeroRetraitScreenState extends State<ClickNumeroRetraitScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _montantController = TextEditingController();
+  RetraitsService retraitService = RetraitsService();
 
   void addTransaction() async {
     AlertComponent().loading();
-    ApiResponse response = await storeTransactionRetrait(
+    ApiResponse response = await retraitService.storeRetraits(
       widget.phoneNumber.phoneNumber,
       widget.phoneNumber.operator,
       _all ? widget.amount.toString() : _montantController.text,
@@ -43,7 +45,7 @@ class _ClickNumeroRetraitScreenState extends State<ClickNumeroRetraitScreen> {
     AlertComponent().endLoading();
 
     if (response.error == null) {
-      AlertComponent().textAlert(response.data.toString(), Colors.black54);
+      AlertComponent().textAlert(response.message.toString(), Colors.black54);
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const LoadingScreen()),
@@ -207,7 +209,7 @@ class _ClickNumeroRetraitScreenState extends State<ClickNumeroRetraitScreen> {
                                 fillColor: Colors.white,
                                 labelText: _all
                                     ? '${NumberFormat("###,###", 'en_US').format(widget.amount).replaceAll(',', ' ')}F CFA'
-                                    : 'Montant à rétirer',
+                                    : 'Montant à retirer',
                                 hintText: NumberFormat("###,###", 'en_US')
                                     .format(widget.amount)
                                     .replaceAll(',', ' '),

@@ -7,6 +7,7 @@ class CloneProduct extends Model {
   String reference;
   String title;
   int price;
+  int commission;
   String phoneNumber;
   String? subTitle;
   String? description;
@@ -15,6 +16,7 @@ class CloneProduct extends Model {
 
   CloneProduct({
     required this.id,
+    required this.commission,
     required this.url,
     required this.reference,
     required this.title,
@@ -27,8 +29,10 @@ class CloneProduct extends Model {
   });
 
   factory CloneProduct.fromJson(Map<String, dynamic> json) {
+    // print("json clone ${json['id']} ${json['product']}");
     return CloneProduct(
       id: json['id'],
+      commission: json['commission'],
       url: json['url'],
       reference: json['reference'],
       title: json['title'],
@@ -38,7 +42,6 @@ class CloneProduct extends Model {
       description: json['description'],
       product: Product.fromJson(json['product']),
       createdAtFr: json['created_at_fr'],
-
     );
   }
 }

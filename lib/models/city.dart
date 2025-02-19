@@ -5,21 +5,29 @@ class City {
   int id;
   String name;
   Country? country;
-  List<FocalPoint> focalPoints;
+  List<FocalPoint>? focalPoints;
 
   City({
     required this.id,
     required this.name,
     this.country,
-    required this.focalPoints,
+    this.focalPoints,
   });
 
   factory City.fromJson(Map<String, dynamic> json) {
+    // print("============city ${json['id']} =================");
+    // if (json == null) {
+    //   print("json est nul");
+    // }
+    // if (json['country'] == null) {
+    //   print("country est nul");
+    // }
     return City(
       id: json['id'],
       name: json['name'],
-      country: Country.fromJson(json['country']),
-      focalPoints: [],
+      country:
+          json['country'] != null ? Country.fromJson(json['country']) : null,
+      // focalPoints: [],
     );
   }
 

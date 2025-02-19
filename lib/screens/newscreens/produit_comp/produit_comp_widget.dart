@@ -142,7 +142,7 @@ class _ProduitCompWidgetState extends State<ProduitCompWidget> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          widget.produit.product.images[0],
+                          widget.produit.product!.images[0],
                           width: 80,
                           height: 80,
                           fit: BoxFit.cover,
@@ -201,8 +201,9 @@ class _ProduitCompWidgetState extends State<ProduitCompWidget> {
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(10, 2, 10, 2),
                           child: Text(
-                            widget.produit.product.state.name[0].toUpperCase() +
-                                widget.produit.product.state.name.substring(1),
+                            widget.produit.product!.state.name[0]
+                                    .toUpperCase() +
+                                widget.produit.product!.state.name.substring(1),
                             style: TextStyle(
                                 fontFamily: 'Inter',
                                 letterSpacing: 0.0,
@@ -397,7 +398,7 @@ class _ProduitCompWidgetState extends State<ProduitCompWidget> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    formatDate(widget.produit.product.createdAt),
+                    formatDate(widget.produit.product!.createdAt),
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 10,

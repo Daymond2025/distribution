@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _professionController = TextEditingController();
 
-  List<dynamic> cities = [];
+  List<City> cities = [];
   CityService cityService = CityService();
 
   String _selectedCity = '';
@@ -135,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _countryFlag = value.code;
       _selectedCity = '';
       _selectedCityId = null;
-      cities = value.cities;
+      cities = value.cities as List<City>;
     });
   }
 
@@ -260,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onTap: () async {
                             CountryService countryService = CountryService();
                             ApiResponse response = await countryService.all();
-                            print(response.error);
+                            // print('response=== ${response.error}');
                             // _model.apiResult2vu = await PaysCall.call();
                             if ((response.error == null)) {
                               await showModalBottomSheet(

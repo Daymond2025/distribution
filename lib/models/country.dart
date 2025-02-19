@@ -8,7 +8,7 @@ class Country {
   String flag;
   String currency;
   String indicatif;
-  List<dynamic> cities;
+  List<City> cities;
 
   Country({
     required this.id,
@@ -22,7 +22,17 @@ class Country {
   });
 
   factory Country.fromJson(Map<String, dynamic> json) {
-    // print(json['cities']);
+    // if (json.containsKey('cities')) {
+    //   print("DEBUG - json['cities']: ${json['cities']}");
+    //   if (json['cities'] != null && json['cities'] is List) {
+    //     print('==taille ${json['cities'].length}');
+    //   } else {
+    //     print("⚠️ WARNING - json['cities'] est NULL ou n'est pas une liste !");
+    //   }
+    // } else {
+    //   print("🚨 ERROR - Clé 'cities' ABSENTE dans le JSON !");
+    // }
+
     return Country(
       id: json['id'],
       isActive: json['isActive'],
@@ -31,7 +41,11 @@ class Country {
       code: json['code'],
       indicatif: json['indicatif'],
       currency: json['currency'],
-      cities: json['cities'],
+      cities: json['cities'] is List
+          ? (json['cities'] as List)
+              .map((item) => City.fromJson(item as Map<String, dynamic>))
+              .toList()
+          : [],
     );
   }
 }

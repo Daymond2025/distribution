@@ -194,7 +194,7 @@ class _InfocommandeWidgetState extends State<InfocommandeWidget> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  widget.produit.product.images[0],
+                                  widget.produit.product!.images[0],
                                   width: 80,
                                   height: 80,
                                   fit: BoxFit.cover,

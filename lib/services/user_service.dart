@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   // LOGIN -------------------------------
-  Future<ApiResponse> login(String contact) async {
+  Future<ApiResponse> login(String contact, String appSignature) async {
     ApiResponse apiResponse = ApiResponse();
     try {
       final response = await http.post(
@@ -19,6 +19,7 @@ class UserService {
           'person': 'seller',
           'option': 'login',
           'phone_number': contact,
+          'appSignature': appSignature
         },
       );
 

@@ -109,6 +109,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
         ),
       );
     }
+    print("==les produits récents ${jsonEncode(_productsR.first.colors)} ");
   }
 
   errorAlert(String text) {

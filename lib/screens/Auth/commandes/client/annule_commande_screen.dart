@@ -31,8 +31,10 @@ class _AnnuleCommandeScreenState extends State<AnnuleCommandeScreen> {
     ApiResponse response =
         await orderService.findAll('person=client&status=canceled');
     if (response.error == null) {
+      print("==order canceled : ${response.data}");
       setState(() {
         _ordersCancelled = response.data as List<Order>;
+
         _loading = true;
         _noCnx = false;
       });
@@ -43,7 +45,7 @@ class _AnnuleCommandeScreenState extends State<AnnuleCommandeScreen> {
                 (route) => false)
           });
     } else {
-      print(response.error);
+      print('== laresponse ${response.error}');
       setState(() {
         _noCnx = true;
       });

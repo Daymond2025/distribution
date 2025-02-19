@@ -53,9 +53,10 @@ class OrderService {
           'Authorization': 'Bearer $token'
         },
       );
-
+      print("le statut code ${response.statusCode}");
       switch (response.statusCode) {
         case 200:
+          print("la reponse ${jsonDecode(response.body)['data']}");
           apiResponse.data = jsonDecode(response.body)['data']
               .map<Order>((json) => Order.fromJson(json))
               .toList();
@@ -91,12 +92,13 @@ Future<ApiResponse> storeCommandeClient(
   String hour,
   String price,
   int focalPoint,
+  int commission,
   String detail,
   String size,
   String color,
 ) async {
   ApiResponse apiResponse = ApiResponse();
-  print("prix tapé dans lapi ${price}");
+  print("prix tapé dans lapi ${date}  ${hour}");
   try {
     String token = await getToken();
     final response =
@@ -117,9 +119,10 @@ Future<ApiResponse> storeCommandeClient(
       'detail': detail,
       'size': size,
       'color': color,
+      'commission': commission.toString()
     });
 
-    print(response.body);
+    print("commande statut code ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
         apiResponse.data = json.decode(response.body)['message'];
@@ -454,11 +457,12 @@ Future<ApiResponse> cancelCommande(int id, String motif) async {
   print(motif);
   try {
     String token = await getToken();
-    final response = await http.post(
-      Uri.parse('${baseURL}commande/annule/$id'),
+    final response = await http.put(
+      Uri.parse('${baseURL}seller/order/$id'),
       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       body: {'motif': motif},
     );
+    print("le status commande ${response.statusCode} ");
     switch (response.statusCode) {
       case 200:
         apiResponse.data = json.decode(response.body)['message'];
@@ -478,6 +482,8 @@ Future<ApiResponse> cancelCommande(int id, String motif) async {
         break;
 
       default:
+        print(
+            "le message erreur commande ${jsonDecode(response.body)['message']} ");
         apiResponse.error = somethingWentWrong;
     }
   } catch (e) {

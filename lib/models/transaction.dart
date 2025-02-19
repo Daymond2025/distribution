@@ -16,25 +16,19 @@ class Transaction {
   String createdAtFr;
   String updatedAtFr;
 
-
   Transaction({
     required this.id,
     required this.type,
-
     required this.amount,
     required this.reference,
     this.operator,
-
     this.order,
     this.phoneNumber,
-
     required this.status,
-
     required this.createdAt,
     required this.updatedAt,
     required this.createdAtFr,
     required this.updatedAtFr,
-
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -46,12 +40,29 @@ class Transaction {
       operator: json['operator'],
       phoneNumber: json['phone_number'],
       order: json['order'] != null ? Order.fromJson(json['order']) : null,
-
       status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       createdAtFr: json['created_at_fr'],
       updatedAtFr: json['updated_at_fr'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'category': type,
+      'amount': amount,
+      'reference': reference,
+      'operator': operator,
+      'phone_number': phoneNumber,
+      'status': status,
+      'order': order
+          ?.toJson(), // Si `order` est non nul, appelle la méthode `toJson` de l'objet `Order`
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'created_at_fr': createdAtFr,
+      'updated_at_fr': updatedAtFr,
+    };
   }
 }

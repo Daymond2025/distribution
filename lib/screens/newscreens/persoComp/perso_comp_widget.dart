@@ -87,7 +87,15 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
         _model.soustitreTextController.text,
         _model.descriptionTextController.text,
         _model.priceTextController.text,
-        _model.contactTextController.text);
+        _model.contactTextController.text,
+        _model.priceTextController.text == null ||
+                _model.priceTextController.text == ''
+            ? widget.product.price.commission
+            : (widget.product.price.commission +
+                    ((int.parse(_model.priceTextController.text) - price) *
+                        70 /
+                        100))
+                .round());
     AlertComponent().endLoading();
 
     if (response.error == null) {
