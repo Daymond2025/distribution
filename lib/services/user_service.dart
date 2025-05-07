@@ -22,7 +22,7 @@ class UserService {
           'appSignature': appSignature
         },
       );
-
+      print("erreur : ${response.statusCode}");
       switch (response.statusCode) {
         case 200:
           apiResponse.data = jsonDecode(response.body);
@@ -55,7 +55,7 @@ class UserService {
       final response = await http.post(Uri.parse('${baseURL}auth/seller/login'),
           headers: {'Accept': 'application/json'},
           body: {'phone_number': contact, 'password': password});
-
+      print(" le statut code ${response.statusCode}");
       switch (response.statusCode) {
         case 200:
           apiResponse.data = jsonDecode(response.body);

@@ -50,6 +50,7 @@ class _DetailsCommandeClientScreenState
   late Profile _profile;
 
   showInfos(Order order) async {
+    print("order status : ${order.status}");
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,

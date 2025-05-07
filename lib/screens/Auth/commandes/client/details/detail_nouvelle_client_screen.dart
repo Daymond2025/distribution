@@ -4,6 +4,7 @@ import 'package:distribution_frontend/screens/Auth/commandes/client/update/formu
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_theme.dart';
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_util.dart';
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_widgets.dart';
+import 'package:distribution_frontend/screens/newscreens/orderSheet/order_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:distribution_frontend/constante.dart';
 import 'package:intl/intl.dart';
@@ -148,6 +149,35 @@ class _DetailNouvelleClientScreenState
                       ],
                     ),
                   )
+                  // Container()
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showInfos(Order order, String status) async {
+    print("order status : ${status}");
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Wrap(
+          children: [
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize
+                    .min, // Ajuste la hauteur en fonction du contenu
+                children: [
+                  OrderSheetWidget(statut: status, order: order),
                   // Container()
                 ],
               ),
@@ -734,152 +764,172 @@ class _DetailNouvelleClientScreenState
                 children: [
                   Visibility(
                     visible: _order.pending?.date != null,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              0,
-                              2,
-                            ),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Commande mise En attente",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
-                            ),
-                            Text(
-                              "${_order.pending?.date}  à ${_order.pending?.time}",
-                              style: TextStyle(fontSize: 9),
+                    child: InkWell(
+                      onTap: () {
+                        showInfos(widget.commande, 'pending');
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x33000000),
+                              offset: Offset(
+                                0,
+                                2,
+                              ),
                             )
                           ],
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Commande mise En attente",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              Text(
+                                "${_order.pending?.date}  à ${_order.pending?.time}",
+                                style: TextStyle(fontSize: 9),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Visibility(
                     visible: _order.inProgress?.date != null,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              0,
-                              2,
-                            ),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Commande mise En Cours",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
-                            ),
-                            Text(
-                              "${_order.inProgress?.date}  à ${_order.inProgress?.time}",
-                              style: TextStyle(fontSize: 9),
+                    child: InkWell(
+                      onTap: () {
+                        showInfos(widget.commande, 'in_progress');
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x33000000),
+                              offset: Offset(
+                                0,
+                                2,
+                              ),
                             )
                           ],
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Commande mise En Cours",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              Text(
+                                "${_order.inProgress?.date}  à ${_order.inProgress?.time}",
+                                style: TextStyle(fontSize: 9),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Visibility(
                     visible: _order.canceled?.date != null,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              0,
-                              2,
-                            ),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Commande mise En Annulé",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
-                            ),
-                            Text(
-                              "${_order.canceled?.date}  à ${_order.canceled?.time}",
-                              style: TextStyle(fontSize: 9),
+                    child: InkWell(
+                      onTap: () {
+                        showInfos(widget.commande, 'canceled');
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x33000000),
+                              offset: Offset(
+                                0,
+                                2,
+                              ),
                             )
                           ],
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Commande mise En Annulé",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              Text(
+                                "${_order.canceled?.date}  à ${_order.canceled?.time}",
+                                style: TextStyle(fontSize: 9),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Visibility(
                     visible: _order.validated?.date != null,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(
-                              0,
-                              2,
-                            ),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Commande mise En Validé",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
-                            ),
-                            Text(
-                              "${_order.validated?.date}  à ${_order.validated?.time}",
-                              style: TextStyle(fontSize: 9),
+                    child: InkWell(
+                      onTap: () {
+                        showInfos(widget.commande, 'validated');
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x33000000),
+                              offset: Offset(
+                                0,
+                                2,
+                              ),
                             )
                           ],
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Commande mise En Validé",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              Text(
+                                "${_order.validated?.date}  à ${_order.validated?.time}",
+                                style: TextStyle(fontSize: 9),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

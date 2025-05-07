@@ -119,6 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else {
+      dynamic data = response.data;
+
+      print("erreur : ${response.data}");
       AlertComponent().endLoading();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

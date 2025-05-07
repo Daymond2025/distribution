@@ -101,10 +101,10 @@ class _ClickProduitState extends State<ClickProduit> {
   Future<void> copyToClipboard() async {
     await Clipboard.setData(ClipboardData(
         text: _product.type == 'grossiste'
-            ? '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX GROSSISTE UNITAIRE: ${_product.price.price}  Fr \nVOUS POUVEZ VENDRE LE PRODUIT ENTRE ${_product.price.min}  Fr ET ${_product.price.max}  Fr'
+            ? '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX GROSSISTE UNITAIRE: ${_product.price.price}  Fr '
             : _product.type == 'vente'
-                ? '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX DE VENTE: ${_product.price.price}  Fr \nCOMMISSION: ${_product.price.commission}  Fr'
-                : '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX A LOUER: ${_product.price.price}  Fr \nCOMMISSION: ${_product.price.commission}  Fr'));
+                ? '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX DE VENTE: ${_product.price.price}  Fr'
+                : '${_product.name} \n${_product.subTitle ?? ''} \n${_product.description ?? ''} \nPRIX A LOUER: ${_product.price.price}  Fr '));
 
     Fluttertoast.showToast(
         msg: 'La copie a été effectuée.',

@@ -86,16 +86,16 @@ class _ListRetraitsWidgetState extends State<ListRetraitsWidget> {
                                 () {
                                   switch (elmtItem.operateur) {
                                     case 'Moov':
-                                      return 'assets/images/MOOV.png';
+                                      return 'assets/images/moov.png';
                                     case 'Orange':
-                                      return 'assets/images/ORANGE.png';
+                                      return 'assets/images/om.png';
                                     case 'Wave':
-                                      return 'assets/images/WAVE.png';
+                                      return 'assets/images/wave.png';
                                     default:
-                                      return 'assets/images/MTN.png';
+                                      return 'assets/images/mtn.png';
                                   }
                                 }(),
-                                width: 85,
+                                width: 45,
                                 height: 45,
                                 fit: BoxFit.cover,
                               ),

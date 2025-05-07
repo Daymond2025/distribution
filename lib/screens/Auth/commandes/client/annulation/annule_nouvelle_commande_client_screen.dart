@@ -23,6 +23,26 @@ class _AnnuleNouvelleComandeClientScreenState
   String motif = '';
 
   final TextEditingController _motifController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  bool isTextFieldFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Écoute les changements de focus
+    _focusNode.addListener(() {
+      setState(() {
+        isTextFieldFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose(); // Nettoyer le focus node
+    super.dispose();
+  }
 
   final List<String> motifs = [
     'Mon client n\'est plus interessé par le produit',
@@ -176,6 +196,7 @@ class _AnnuleNouvelleComandeClientScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: colorwhite,
         appBar: AppBar(
           backgroundColor: colorwhite,
@@ -189,168 +210,187 @@ class _AnnuleNouvelleComandeClientScreenState
             ),
           ),
         ),
-        body: Container(
+        body:
+            // SingleChildScrollView(
+            //   child: Column(
+            // children: [
+            Container(
           padding: const EdgeInsets.only(
-            top: 25,
+            top: 20,
             right: 15,
             left: 15,
           ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(
-                  right: 25,
-                  left: 25,
-                  bottom: 20,
-                ),
-                child: const Text(
-                  'Quel sont les motifs de l\'annulation de cette commande?',
-                  style: TextStyle(
-                    fontSize: 17,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(
+                    right: 25,
+                    left: 25,
+                    bottom: 20,
+                  ),
+                  child: const Text(
+                    'Quel sont les motifs de l\'annulation de cette commande?',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
-                ),
-                child: Column(
-                  children: [
-                    Column(
-                      children: motifs.map((e) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 2, color: colorBlue),
-                            borderRadius: BorderRadius.circular(24),
-                            color: motif == e
-                                ? Colors.black12
-                                : Colors.transparent,
-                          ),
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () {
-                              setState(() {
-                                motif = e;
-                                _motifController.text = motif;
-                                personel = false;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              padding: const EdgeInsets.only(
-                                  top: 10, bottom: 10, left: 15, right: 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      e,
-                                      style: const TextStyle(
-                                        color: colorBlue,
-                                        fontSize: 15,
+                Container(
+                  padding: const EdgeInsets.only(
+                    right: 20,
+                    left: 20,
+                    bottom: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      Column(
+                        children: motifs.map((e) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: colorBlue),
+                              borderRadius: BorderRadius.circular(24),
+                              color: motif == e
+                                  ? Colors.black12
+                                  : Colors.transparent,
+                            ),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () {
+                                setState(() {
+                                  motif = e;
+                                  _motifController.text = motif;
+                                  personel = false;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                padding: const EdgeInsets.only(
+                                    top: 10, bottom: 10, left: 15, right: 15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        e,
+                                        style: const TextStyle(
+                                          color: colorBlue,
+                                          fontSize: 15,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () {
-                        setState(() {
-                          motif = '';
-                          _motifController.text = '';
-                          personel = !personel;
-                        });
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.centerRight,
-                        child: const Text(
-                          'Autres Motifs ?',
-                          style: TextStyle(
-                            color: colorBlue,
-                            decoration: TextDecoration.underline,
-                            decorationColor: colorannule,
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       ),
-                    ),
-                    personel
-                        ? TextFormField(
-                            controller: _motifController,
-                            decoration: const InputDecoration(
-                                hintText: 'Saisissez le motif'),
-                          )
-                        : Container(),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        bottomSheet: Container(
-          color: colorwhite,
-          child: InkWell(
-            onTap: () {
-              _motifController.text == ''
-                  ? Fluttertoast.showToast(
-                      msg: 'Veuillez donner le motif de la l\'annulation svp!',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0)
-                  : cancel();
-            },
-            child: Container(
-              padding: EdgeInsets.zero,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                        bottom: 10,
-                      ),
-                      margin: const EdgeInsets.only(
-                          bottom: 10, left: 10, right: 10),
-                      decoration: const BoxDecoration(
-                        color: colorYellow2,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(6),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'VALIDER',
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          setState(() {
+                            motif = '';
+                            _motifController.text = '';
+                            personel = !personel;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            'Autres Motifs ?',
                             style: TextStyle(
-                              color: colorwhite,
-                              fontSize: 14,
+                              color: colorBlue,
+                              decoration: TextDecoration.underline,
+                              decorationColor: colorannule,
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+                      personel
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: TextFormField(
+                                focusNode: _focusNode,
+                                controller: _motifController,
+                                decoration: const InputDecoration(
+                                    hintText: 'Saisissez le motif'),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        //     ],
+        //   ),
+        // ),
+        bottomSheet: Visibility(
+          visible: MediaQuery.of(context).viewInsets.bottom <= 0,
+          child: Container(
+            color: colorwhite,
+            child: InkWell(
+              onTap: () {
+                _motifController.text == ''
+                    ? Fluttertoast.showToast(
+                        msg:
+                            'Veuillez donner le motif de la l\'annulation svp!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0)
+                    : cancel();
+              },
+              child: Container(
+                padding: EdgeInsets.zero,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          top: 10,
+                          bottom: 10,
+                        ),
+                        margin: const EdgeInsets.only(
+                            bottom: 10, left: 10, right: 10),
+                        decoration: const BoxDecoration(
+                          color: colorYellow2,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(6),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'VALIDER',
+                              style: TextStyle(
+                                color: colorwhite,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

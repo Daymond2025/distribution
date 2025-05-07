@@ -90,7 +90,8 @@ class _OrderSheetWidgetState extends State<OrderSheetWidget> {
                         updateCallback: () => safeSetState(() {}),
                         child: CommandeAttenteWidget(order: widget.order),
                       );
-                    } else if (widget!.statut == 'canceled') {
+                    } else if (widget!.statut == 'canceled' ||
+                        widget.statut == 'canceled_by_admin') {
                       return Container(
                         // height: 200,
                         child: wrapWithModel(

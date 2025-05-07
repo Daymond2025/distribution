@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:app_links/app_links.dart';
+// import 'package:android_intent_plus/android_intent.dart';
+// import 'package:android_intent_plus/flag.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -15,6 +18,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // await FirebaseApi().initNotifications();
+  final appLinks = AppLinks(); // AppLinks is singleton
+
+// Subscribe to all events (initial link and further)
+  final sub = appLinks.uriLinkStream.listen((uri) {
+    // Do something (navigation, ...)
+    print('=====uri: ${uri.toString()}');
+  });
   runApp(
     MultiProvider(
       providers: [
@@ -37,7 +47,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    // openAppSettings();
   }
+
+  // void openAppSettings() async {
+  //   final intent = AndroidIntent(
+  //     action: 'android.settings.APPLICATION_DETAILS_SETTINGS',
+  //     data: 'package:com.daymondboutique.distribution_frontend',
+  //   );
+  //   await intent.launch();
+  // }
 
   @override
   Widget build(BuildContext context) {
