@@ -125,13 +125,16 @@ class _FormulaireCommandeScreenState extends State<FormulaireCommandeScreen> {
   }
 
   Future<void> createCommand() async {
+    int frais = unitPriceDelivery; // 🆕 FRAIS ajoutés ici
     print('prix tapé ${_prixController.text}');
+    
     ApiResponse response = await storeCommandeClient(
       widget.product.id,
       cityId,
       _nomController.text,
       _contactController.text,
       _nbcmd,
+      frais, // ✅ FEES ajouté ici (int)
       _date,
       _heure,
       _prixController.text,

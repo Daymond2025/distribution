@@ -1,4 +1,3 @@
-
 import 'package:distribution_frontend/models/notification.dart';
 
 class NotificationView {

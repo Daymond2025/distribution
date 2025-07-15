@@ -1,0 +1,2 @@
+C:/Users/pc/Desktop/DAYMOND_PROJETS/DAYMOND_MOBILE_DISTRIBUTION/android/app/.cxx/Debug/4q4k1r5g/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/pc/Desktop/DAYMOND_PROJETS/DAYMOND_MOBILE_DISTRIBUTION/android/app/.cxx/Debug/4q4k1r5g/arm64-v8a/CMakeFiles/rebuild_cache.dir
