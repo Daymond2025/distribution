@@ -180,48 +180,68 @@ class _MessageScreenState extends State<MessageScreen> {
                               )
                             ],
                           ),
-                          Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0, 100, 0, 120),
-                                child: FFButtonWidget(
-                                  onPressed: () async {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         NewConversationScreen(
-                                    //       profiles: _profiles,
-                                    //     ),
-                                    //   ),
-                                    // );
-                                    await launchURL(
-                                        'https://wa.me/+2250707545252?text=Bonjour%20Daymond,%20j\'ai%20une%20question%20?');
-                                  },
-                                  text: 'Commencer',
-                                  options: FFButtonOptions(
-                                    height: 40,
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        70, 12, 70, 12),
-                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 0),
-                                    color: Color(0xFFFF9700),
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                          fontFamily: 'Inter Tight',
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          letterSpacing: 0.0,
-                                        ),
-                                    elevation: 0,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                          Column(children: [
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 100, 0, 12),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await launchURL(
+                                      'https://wa.me/+2250707545252?text=Bonjour%20Daymond,%20j\'ai%20une%20question%20?');
+                                },
+                                text: 'Commencer',
+                                options: FFButtonOptions(
+                                  height: 40,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      70, 12, 70, 12),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 0),
+                                  color: Color(0xFFFF9700),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Inter Tight',
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        letterSpacing: 0.0,
+                                      ),
+                                  elevation: 0,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+
+                            /// 🔁 Nouveau bouton : Rejoignez la communauté
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 120),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await launchURL(
+                                      'https://linkful.me/nTbxD'); // ← modifie ici avec le vrai lien Telegram, Discord ou autre
+                                },
+                                text: 'Rejoignez la communauté',
+                                options: FFButtonOptions(
+                                  height: 40,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      30, 12, 30, 12),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 0),
+                                  color: Color.fromARGB(213, 0, 0, 0), // Une autre couleur pour distinguer ?
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Inter Tight',
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        letterSpacing: 0.0,
+                                      ),
+                                  elevation: 0,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ]),
 
                           Text(
                             'Service WhatsApp',

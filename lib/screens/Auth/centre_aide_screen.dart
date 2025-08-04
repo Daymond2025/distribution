@@ -192,7 +192,7 @@ class _CentreAideScreenState extends State<CentreAideScreen> {
                         ),
                       ),
                     ),
-                    Container(
+                    /*Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(
                         bottom: 5,
@@ -231,7 +231,7 @@ class _CentreAideScreenState extends State<CentreAideScreen> {
                           ],
                         ),
                       ),
-                    ),
+                    ),*/
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(
@@ -454,52 +454,52 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                     children: [
                       Container(
                         child: const Text(
-                          'Daymond est une société de marketing et de distribution qui a pour mission la distribution de divers produits partout dans le monde.',
+                          'Daymond est une société de distribution et premier fournisseur spécialisé dans le dropshipping en Afrique.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Elle utilise le digital pour faciliter la communication et la distribution de ses produits et services.',
+                          'cette plateforme offre aux revendeurs en ligne un large choix de produits de diverses catégories, issus de fournisseurs fiables et prêts à être livrés a vos clients.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Dans ces canaux de distribution, nous y trouvons l’application Daymond Distribution. ',
+                          'Cette opportunité vous permet d\'approvisionner vos boutiques en ligne, de proposer ces produits à vos clients sans gestion du stock, ',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Daymond Distribution est une plateforme d’exposition de produit au prix de grossiste, elle donne la possibilité aux revendeurs de naviguer dans une vaste panoplie de produits à des prix extrêmement bas, ce qui leur permet de revendre et de profiter d’un bénéfice plus élevé que la norme.',
+                          'ni de livraison et gagnez des commissions attractives sur chaque vente effectuée.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
-                      Container(
-                        child: const Text(
-                          'Tout le monde est habilité a travailler sur daymond et cela quelque soit votre localision.',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: const Text(
-                          'Daymond distribution est une application totalement gratuite, car il y’a rien à payer à l’installation, rien à payer à l’inscription et rien à payer au retrait de vos commissions.',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: const Text(
-                          'Vous ne paierez jamais de frais pour quoi que ce soit sur daymond distribution.',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
+                      //Container(
+                      //child: const Text(
+                      //'Tout le monde est habilité a travailler sur daymond et cela quelque soit votre localision.',
+                      //textAlign: TextAlign.justify,
+                      //),
+                      //),
+                      //const SizedBox(
+                      //height: 10,
+                      //),
+                      //Container(
+                      //child: const Text(
+                      //'Daymond distribution est une application totalement gratuite, car il y’a rien à payer à l’installation, rien à payer à l’inscription et rien à payer au retrait de vos commissions.',
+                      //textAlign: TextAlign.justify,
+                      //),
+                      //),
+                      //const SizedBox(
+                      //height: 10,
+                      //),
+                      //Container(
+                      //child: const Text(
+                      //'Vous ne paierez jamais de frais pour quoi que ce soit sur daymond distribution.',
+                      //textAlign: TextAlign.justify,
+                      //),
+                      //),
                       const SizedBox(
                         height: 10,
                       ),
@@ -598,7 +598,19 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                     children: [
                       Container(
                         child: const Text(
-                          'Votre mission est de vendre les produits distribués sur l’application daymond distribution et gagner 50% du bénéfice que vous allez ajouter sur le prix grossiste daymond. Pour accomplir vos missions sans complication nous vous recommandons de suivre les étapes ci-dessous.',
+                          'En tant que agent commercial indépendant chez Daymond, votre mission est de revendre en ligne les produits disponibles sur l’application Daymond à vos clients via Facebook, WhatsApp,',
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                      Container(
+                        child: const Text(
+                          'Instagram, TikTok ou vos boutiques en ligne — sans gérer de stock ni de livraison — et de gagner des commissions attractives allant de 1 500 Fr. à 2 500 000 Fr. sur chaque vente réalisée. ',
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                      Container(
+                        child: const Text(
+                          'Pour accomplir vos missions de la façon la plus simple possible, nous vous recommandons de suivre les étapes ci-dessous afin de mieux comprendre le processus et maximiser vos gains.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
@@ -1731,19 +1743,28 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                     children: [
                       Container(
                         child: const Text(
-                          'Pour vendre un produit il faut sélectionner l’un des produits distribués sur l’application daymond distribution.',
+                          'Avec Daymond, vous avez deux méthodes simples pour vendre des produits en ligne : la vente via un lien personnalisé et la vente manuelle.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Ensuite utiliser l’icône télécharger pour enregistrer les images du produit dans votre galerie.',
+                          '\nVoici comment procéder :',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Et l’icône copie pour copier l’intégralité des informations du produit pour les modifier plus tard.',
+                          '\n🌐 1. Vente via un lien personnalisé (méthode rapide)\n\n'
+                          'Cette méthode vous permet de partager un lien de vente unique avec vos clients pour qu’ils passent commande directement.\n\n'
+                          'Étapes à suivre :\n\n'
+                          '1. Sélectionnez le produit que vous souhaitez vendre à vos clients.\n'
+                          '2. Cliquez sur le bouton “Vendre ce produit”.\n'
+                          '3. Augmentez le prix de vente si nécessaire (vous pouvez l’augmenter pour gagner beaucoup plus de commission).\n'
+                          '4. Saisissez votre numéro WhatsApp dans le champ prévu pour permettre aux clients de vous contacter facilement.\n'
+                          '5. Cliquez sur le bouton “Enregistrez”.\n'
+                          '6. Ensuite, copiez le lien de vente généré. Ou partagez ce lien sur vos réseaux sociaux (WhatsApp, Facebook, Instagram, TikTok…) ou toute autre plateforme de communication.\n\n'
+                          '✅ Avantage : Vos clients peuvent passer commande directement via votre lien, et vous recevez leurs demandes sans effort.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
@@ -1752,13 +1773,24 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                       ),
                       Container(
                         child: const Text(
-                          'A l’aide des images du produit téléchargé et les informations copiées, vous pouvez à présent les collègues et votre entourage sur WhatsApp, Facebook, Tik Tok, Instagram, les sites de vente et',
+                          '\n📲 2. Vente manuelle (méthode personnalisée)\n\n'
+                          'Cette méthode vous permet de gérer les ventes vous-même, idéale si vous voulez négocier directement avec vos clients.\n\n'
+                          'Étapes à suivre :\n\n'
+                          '1. Sélectionnez le produit que vous souhaitez vendre à vos clients.\n'
+                          '2. Téléchargez les images du produit en cliquant sur le bouton “Télécharger”.\n'
+                          '3. Copiez les informations du produit à l’aide du bouton “Copier”.\n'
+                          '4. Proposez le produit à vos clients sur vos différents canaux de vente (WhatsApp, Facebook, Instagram…) en leur envoyant manuellement les images du produit que vous avez téléchargées et les informations que vous avez copiées.\n'
+                          '5. Si un client est intéressé, recueillez ses informations de livraison (nom, adresse, contact).\n'
+                          '6. Revenez sur l’application et cliquez sur le bouton “Je passe la commande”.\n'
+                          '7. Suivez les instructions pour finaliser la commande au nom de votre client.\n\n'
+                          '✅ Avantage : Vous gardez un contact direct avec vos clients et personnalisez l’expérience de vente.',
                           textAlign: TextAlign.justify,
                         ),
                       ),
                       Container(
                         child: const Text(
-                          'Pour vendre un produit il faut sélectionner l’un des autres moyens de communications. ',
+                          'Ces deux méthodes vous permettent de vendre efficacement les produits Daymond et de maximiser vos gains. '
+                          'Choisissez celle qui vous convient le mieux et commencez dès maintenant ! 💼✨',
                           textAlign: TextAlign.justify,
                         ),
                       ),
@@ -2629,7 +2661,7 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
             Container(
               padding: const EdgeInsets.all(10),
               child: const Text(
-                'GESTION D\'UN TROC',
+                'Gestion de ma boutique',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -2663,132 +2695,76 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                     children: [
                       Container(
                         child: RichText(
-                          text: const TextSpan(
-                            text: 'La gestion des trocs regroupe ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400),
-                            children: <TextSpan>[
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black, height: 1.5),
+                            children: [
                               TextSpan(
-                                text: '4 étapes ',
+                                text: 'Ma Boutique Daymond 🌟\n\n',
                                 style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                              TextSpan(
-                                text: 'qui se présentent comme suit : ',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: RichText(
-                          text: const TextSpan(
-                            text: '1. Analyse : ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                            children: <TextSpan>[
                               TextSpan(
                                 text:
-                                    'Après avoir rempli le formulaire de troc et cliqué sur le bouton Envoyer la demande vous trouverez votre demande dans la section ANALYSE car daymond prend le soin d’analyser vos demandes avant d’estimer le montant du troc.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
+                                    'La fonctionnalité “Ma Boutique” vous permet de gérer facilement vos produits et d’obtenir une boutique en ligne personnalisée à votre nom.\n\n',
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: RichText(
-                          text: const TextSpan(
-                            text: '2. Résultat : ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Comment ça fonctionne ?\n\n',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: '• Ajout automatique des produits : ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               TextSpan(
                                 text:
-                                    'Cette section donne la réponse de daymond après avoir analysé votre demande. Dans cette réponse vous verrez l’estimation du montant à ajouter sur votre produit pour prendre le produit daymond et autres détails liés au troc. ',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
+                                    'Chaque fois que vous cliquez sur “Vendre ce produit” et générez un lien de vente, le produit est automatiquement ajouté à votre boutique.\n\n',
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: RichText(
-                          text: const TextSpan(
-                            text: '-  ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20),
-                            children: <TextSpan>[
+                              TextSpan(
+                                text: '• Suivi des performances : ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               TextSpan(
                                 text:
-                                    'Cependant vous aurez la possibilité d’accepter, de discuter avec daymond ou d’annuler la demande du troc.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14),
+                                    'Vous pouvez consulter le nombre de personnes ayant cliqué sur vos liens de vente et le nombre de commandes passées par vos clients.\n\n',
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: RichText(
-                          text: const TextSpan(
-                            text: '3. Validé : ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                            children: <TextSpan>[
+                              TextSpan(
+                                text: '• Partage simplifié : ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               TextSpan(
                                 text:
-                                    'Cette section regroupe tous les trocs que vous avez accepté en cliquant sur le bouton validé.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
+                                    'Un lien unique vers votre boutique est disponible, que vous pouvez partager partout — sur WhatsApp, Facebook, Instagram, TikTok ou tout autre canal.\n\n',
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: RichText(
-                          text: const TextSpan(
-                            text: '4. Annulé : ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Pourquoi c’est puissant ?\n\n',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: '👉 Vos clients auront accès à ',
+                              ),
+                              TextSpan(
+                                text: 'l’ensemble de vos produits ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               TextSpan(
                                 text:
-                                    'Troc annulé donne la liste des trocs annulés par vous-même, par vos clients ou par daymond avec les motifs de l\'annulation du troc.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
+                                    'via votre boutique personnalisée, et ils pourront passer commande directement, sans votre intervention.\n\n',
+                              ),
+                              TextSpan(
+                                text: '👉 Cela signifie que vous pouvez ',
+                              ),
+                              TextSpan(
+                                text: 'générer des ventes automatiques ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text:
+                                    'et gagner de l’argent même lorsque vous n’êtes pas connecté.\n\n',
+                              ),
+                              TextSpan(
+                                text:
+                                    'Profitez de cette fonctionnalité pour booster votre visibilité et vos revenus dès maintenant ! 🚀',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -3213,7 +3189,7 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        '    Gestion d\'un troc',
+                        '    Gestion de ma boutique',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -3239,7 +3215,7 @@ class _FonctionnementOffreState extends State<FonctionnementOffre> {
   }
 }
 
-void Signification7EtoileShowmodal(BuildContext context) {
+/*void Signification7EtoileShowmodal(BuildContext context) {
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -3581,7 +3557,7 @@ void Signification7EtoileShowmodal(BuildContext context) {
           );
         }),
   );
-}
+}*/
 
 void EtrePayershowMyModal(BuildContext context) {
   showModalBottomSheet(
@@ -3603,394 +3579,89 @@ void EtrePayershowMyModal(BuildContext context) {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(flex: 1, child: SizedBox()),
-                      Expanded(
-                        flex: 7,
-                        child: SizedBox(
-                            child: Row(
-                          children: [
-                            Text(
-                              'COMMENT ETRE REMUNERE ',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: colorblack,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              '  ?',
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  color: colorblack,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        )),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
                   Container(
-                    height: 1,
-                    decoration: const BoxDecoration(
-                      color: colorfond,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromARGB(78, 158, 158, 158),
-                          blurRadius: 5,
-                          offset: Offset(1, 2),
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(75, 158, 158, 158),
-                          blurRadius: 5,
-                          offset: Offset(2, 1),
-                        ),
-                      ],
+                    child: const Text(
+                      'Comment être rémunéré\n',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  Container(
+                    child: const Text(
+                      'Chez Daymond, nous attachons une grande importance à la rémunération de nos agents de vente pour assurer une collaboration transparente et équitable.',
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                          'Pour une bonne collaboration nous mettons un grand'),
-                      Text(''),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'regard sur la rémunération de nos agents de vente. ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      )
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'Dans ce sens nous partageons le bénéfice de chaque',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'produit vendu à part égale, c\'est-à-dire ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text('50% / 50% ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      '\nVoici comment fonctionne la rémunération :',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text('A la fin de chaque produit vendu un versement de'),
-                      Text(''),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'votre commission est instantanément viré sur votre',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      )
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'portefeuille daymond, avec possibilité de retirer votre',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'argent à tout moment, quel que soit votre localisation',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'par le moyen de votre choix en envoyer une demande',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'de retrait a daymond. ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(flex: 1, child: SizedBox()),
-                      Expanded(
-                        flex: 60,
-                        child: SizedBox(
-                            child: Row(
-                          children: [
-                            Text(
-                              'COMMENT RETIRER DE L\'ARGENT',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: colorblack,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              '  ?',
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  color: colorblack,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        )),
-                      ),
-                    ],
+                    child: const Text(
+                      '• Pour chaque produit vendu, la commission que vous gagnez est clairement affichée.\n\n'
+                      '• Si vous décidez d’augmenter le prix de vente par rapport au prix initial, vous bénéficierez d’une commission supplémentaire de 70 % du montant ajouté, en plus de votre commission initiale.',
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                          'Pour retirer de l’argent de votre portefeuille vous'),
-                      Text(' '),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text('devez envoyer une demande de retrait a daymond en'),
-                      Text(' '),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text('suivant les instructions suivantes :'),
-                      Text(' '),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      '\nVersement de la commission',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text('Etape 1 : ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text(
-                        ' Allez sur votre portefeuille et cliquer sur le ',
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'bouton ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text('RETRAIT ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      'À la fin de chaque vente, votre commission est immédiatement créditée sur votre portefeuille Daymond. Vous pouvez retirer votre argent à tout moment, quel que soit votre lieu de résidence, en envoyant une demande de retrait à Daymond.',
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text('Etape 2 : ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text(
-                        ' Sélectionnez un  ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text('compte mobile money ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text('préenregistré ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text(
-                        'ou ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text('enregistrer un nouveau compte.',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      '\nComment retirer de l’argent',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text('Etape 3 : ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text(
-                        ' Entrez le montant à retirer et cliquer sur  ',
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text('Envoyer la demande ',
-                          style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text(
-                        'pour finaliser. ',
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      'Pour retirer de l’argent de votre portefeuille Daymond, suivez ces étapes simples :',
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
                   Container(
-                      child: const Row(
-                    children: [
-                      Text('Apres réception de votre demande, daymond '),
-                      Text(''),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'procède immédiatement à un virement direct du ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      )
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'montant que vous avez demandé par le moyen de ',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'paiement que vous avez choisi lors de la demande. A',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  Container(
-                      child: const Row(
-                    children: [
-                      Text(
-                        'la fin vous êtes notifiés des détails de votre paiement',
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        '',
-                      ),
-                    ],
-                  )),
-                  const SizedBox(
-                    height: 10,
+                    child: const Text(
+                      '\nÉtape 1 :\nAccédez à votre portefeuille et cliquez sur le bouton RETRAIT.',
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.close_rounded),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Container(
-                        child: Row(children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Signification7EtoileShowmodal(context);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.arrow_forward),
-                            onPressed: () {},
-                          ),
-                        ]),
-                      )
-                    ],
-                  )
+                  Container(
+                    child: const Text(
+                      '\nÉtape 2 :\nSélectionnez un compte Mobile Money préenregistré ou enregistrez un nouveau compte.',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  Container(
+                    child: const Text(
+                      '\nÉtape 3 :\nEntrez le montant à retirer et cliquez sur Envoyer la demande pour finaliser la procédure.',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  Container(
+                    child: const Text(
+                      '\nAprès avoir reçu votre demande, Daymond procédera immédiatement au virement du montant demandé via le moyen de paiement que vous avez choisi. Vous serez ensuite notifié des détails de votre paiement.',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  Container(
+                    child: const Text(
+                      '\nAinsi, vous avez une méthode simple et rapide pour recevoir vos gains et les retirer à votre convenance !',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
                 ],
               ),
             ),

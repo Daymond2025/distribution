@@ -33,6 +33,8 @@ void main() async {
   // Initialize notifications lorsque l'app est lancé pour la première fois , ou lors de la mise a jour de l'app
   await FirebaseApi().initNotifications();
 
+  
+
   final appLinks = AppLinks(); // AppLinks is singleton
 
   // Subscribe to all events (initial link and further)

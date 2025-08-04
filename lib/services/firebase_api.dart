@@ -11,9 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Fonction exécutée quand une notif arrive en background
 Future<void> onBackgroundMessage(RemoteMessage message) async {
-  debugPrint('📨 [BG] Title: ${message.notification?.title}');
-  debugPrint('📨 [BG] Body: ${message.notification?.body}');
-  debugPrint('📨 [BG] Payload: ${message.data}');
+  // Ne pas utiliser debugPrint ici
+  // Optionnel : tu peux préparer une notification locale ici, si nécessaire
 }
 
 class FirebaseApi {
