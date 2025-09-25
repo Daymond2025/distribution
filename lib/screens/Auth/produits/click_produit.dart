@@ -98,7 +98,7 @@ class _ClickProduitState extends State<ClickProduit> {
     } else {}
   }
 
-  // copy
+  // copy to clipboard
   Future<void> copyToClipboard() async {
     await Clipboard.setData(ClipboardData(
         text: _product.type == 'grossiste'
@@ -288,6 +288,9 @@ class _ClickProduitState extends State<ClickProduit> {
       description: product.description ?? '',
       price: product.price.price, // un int (ou double)
       commission: product.price.commission ?? 0,
+      // 🆕 champs obligatoires
+      isWinningProduct: product.isWinningProduct ?? false,
+      winningBonusAmount: product.winningBonusAmount ?? 0,
     );
 
     if (response.error == null) {
@@ -854,7 +857,7 @@ class _ClickProduitState extends State<ClickProduit> {
                                             String url = _product.link!;
                                             await canLaunch(url)
                                                 ? launch(url)
-                                                : print('Youtue non ouvert');
+                                                : print('Youtube non ouvert');
                                           },
                                           child: Image.asset(
                                             'assets/images/youtube.png',

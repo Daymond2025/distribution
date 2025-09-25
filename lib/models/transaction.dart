@@ -4,7 +4,7 @@ import 'package:distribution_frontend/models/order.dart';
 class Transaction {
   int id;
   String reference;
-  String type;
+  String? type; // 🔥 nullable
   int amount;
   String? operator;
   String? phoneNumber;
@@ -18,7 +18,7 @@ class Transaction {
 
   Transaction({
     required this.id,
-    required this.type,
+    this.type,
     required this.amount,
     required this.reference,
     this.operator,
@@ -34,17 +34,19 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'],
-      type: json['category'],
-      amount: json['amount'],
-      reference: json['reference'],
+      type: json['category'] as String?, // 🔥 corrigé + nullable
+      amount: json['amount'] is String
+          ? int.tryParse(json['amount']) ?? 0
+          : json['amount'] ?? 0, // 🔥 safe parse
+      reference: json['reference'] ?? '',
       operator: json['operator'],
       phoneNumber: json['phone_number'],
       order: json['order'] != null ? Order.fromJson(json['order']) : null,
-      status: json['status'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      createdAtFr: json['created_at_fr'],
-      updatedAtFr: json['updated_at_fr'],
+      status: json['status'] ?? '',
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
+      createdAtFr: json['created_at_fr'] ?? '',
+      updatedAtFr: json['updated_at_fr'] ?? '',
     );
   }
 
@@ -57,8 +59,7 @@ class Transaction {
       'operator': operator,
       'phone_number': phoneNumber,
       'status': status,
-      'order': order
-          ?.toJson(), // Si `order` est non nul, appelle la méthode `toJson` de l'objet `Order`
+      'order': order?.toJson(),
       'created_at': createdAt,
       'updated_at': updatedAt,
       'created_at_fr': createdAtFr,

@@ -22,6 +22,8 @@ import 'package:distribution_frontend/services/home_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:distribution_frontend/widgets/search_product.dart';
+import 'package:distribution_frontend/widgets/clic_card.dart'; //
+import 'package:distribution_frontend/screens/Auth/produits/produits_clic_25.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -56,6 +58,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
 
   HomeService homeService = HomeService();
 
+  // ignore: non_constant_identifier_names
   Future<void> showVendeur() async {
     EasyLoading.dismiss();
 
@@ -66,6 +69,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
         ));
   }
 
+  // ignore: non_constant_identifier_names
   Future<void> dataReq() async {
     ApiResponse response = await homeService.getDashboard();
     final prefs = await SharedPreferences.getInstance();
@@ -112,6 +116,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
     print("==les produits récents ${jsonEncode(_productsR.first.colors)} ");
   }
 
+  // ignore: non_constant_identifier_names
   errorAlert(String text) {
     var alertStyle = AlertStyle(
         animationType: AnimationType.fromTop,
@@ -142,6 +147,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
     ).show();
   }
 
+  // ignore: non_constant_identifier_names
   chargementAlert() {
     EasyLoading.instance
       ..displayDuration = const Duration(milliseconds: 2000)
@@ -683,6 +689,25 @@ class _AccueilScreenState extends State<AccueilScreen> {
                                             ],
                                           ),
                                         ),
+                                        // 🔥 Notre widget ajouté ICI
+                                        //Padding(
+                                        //padding: const EdgeInsets.symmetric(
+                                        //vertical: 5),
+                                        //child: ClicCard(
+                                        //onTap: () {
+                                        // Ici tu mets l’action à exécuter quand on clique sur "Voir plus"
+                                        // Exemple : navigation vers une nouvelle page
+                                        //Navigator.push(
+                                        //context,
+                                        //MaterialPageRoute(
+                                        //builder: (context) =>
+                                        //  const SomeDestinationScreen(), // ton écran cible
+                                        //),
+                                        //);
+                                        //},
+                                        //),
+                                        //),
+
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 5),
@@ -699,59 +724,51 @@ class _AccueilScreenState extends State<AccueilScreen> {
                                                   screenWidth >= 600
                                                       ? 1.3
                                                       : 0.60,
-                                              // mainAxisExtent:
-                                              //     !_loading ? 280 : 280,
                                             ),
                                             itemCount: !_loading
-                                                ? _productsR.length
-                                                : 4,
+                                                ? _productsR.length + 1
+                                                : 4, // 👈 +1 pour ClicCard
                                             itemBuilder: (_, index) {
-                                              return !_loading
-                                                  ? InkWell(
-                                                      onTap: () => {},
-                                                      child: produitsCard(
+                                              if (!_loading) {
+                                                if (index == 0) {
+                                                  // 👉 première carte = ClicCard
+                                                  return ClicCard(
+                                                    onTap: () {
+                                                      Navigator.push(
                                                         context,
-                                                        _productsR
-                                                            .elementAt(index),
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .id,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .name,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .price
-                                                            .price,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .reducedPrice,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .state
-                                                            .name,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .star,
-                                                        _productsR
-                                                                .elementAt(
-                                                                    index)
-                                                                .images
-                                                                .isEmpty
-                                                            ? imgProdDefault
-                                                            : _productsR
-                                                                .elementAt(
-                                                                    index)
-                                                                .images[0],
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .stock,
-                                                        _productsR
-                                                            .elementAt(index)
-                                                            .unavailable,
-                                                      ),
-                                                    )
-                                                  : produitLoadingCard3x3();
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ProduitsClic25Screen(),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  // 👉 autres cartes = produits
+                                                  final product = _productsR
+                                                      .elementAt(index - 1);
+                                                  return InkWell(
+                                                    onTap: () => {},
+                                                    child: produitsCard(
+                                                      context,
+                                                      product,
+                                                      product.id,
+                                                      product.name,
+                                                      product.price.price,
+                                                      product.reducedPrice,
+                                                      product.state.name,
+                                                      product.star,
+                                                      product.images.isEmpty
+                                                          ? imgProdDefault
+                                                          : product.images[0],
+                                                      product.stock,
+                                                      product.unavailable,
+                                                    ),
+                                                  );
+                                                }
+                                              } else {
+                                                return produitLoadingCard3x3();
+                                              }
                                             },
                                           ),
                                         ),

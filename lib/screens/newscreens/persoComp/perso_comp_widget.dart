@@ -82,20 +82,24 @@ class _PersoCompWidgetState extends State<PersoCompWidget> {
     List<dynamic> data;
     AlertComponent().loading();
     ApiResponse response = await CloneProductService().storeClone(
-        widget.product.id,
-        _model.nomControllerTextController.text,
-        _model.soustitreTextController.text,
-        _model.descriptionTextController.text,
-        _model.priceTextController.text,
-        _model.contactTextController.text,
-        _model.priceTextController.text == null ||
-                _model.priceTextController.text == ''
-            ? widget.product.price.commission
-            : (widget.product.price.commission +
-                    ((int.parse(_model.priceTextController.text) - price) *
-                        70 /
-                        100))
-                .round());
+      widget.product.id,
+      _model.nomControllerTextController.text,
+      _model.soustitreTextController.text,
+      _model.descriptionTextController.text,
+      _model.priceTextController.text,
+      _model.contactTextController.text,
+      _model.priceTextController.text == null ||
+              _model.priceTextController.text == ''
+          ? widget.product.price.commission
+          : (widget.product.price.commission +
+                  ((int.parse(_model.priceTextController.text) - price) *
+                      70 /
+                      100))
+              .round(),
+      // 🆕 Ajouts obligatoires
+      widget.product.isWinningProduct ?? false,
+      widget.product.winningBonusAmount ?? 0,
+    );
     AlertComponent().endLoading();
 
     if (response.error == null) {

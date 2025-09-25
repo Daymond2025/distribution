@@ -45,6 +45,65 @@ class ProductService {
     return apiResponse;
   }
 
+  //Produits gagnants clics 25
+  Future<ApiResponse> getWinningProducts(
+      {int page = 1, int perPage = 10}) async {
+    ApiResponse apiResponse = ApiResponse();
+
+    try {
+      String token = await getToken();
+      print("[API] Token récupéré : $token");
+
+      final response = await http.get(
+        Uri.parse(
+            '${baseURL}front/product/winning?page=$page&per_page=$perPage'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print("[API] Status code: ${response.statusCode}");
+      print("[API] Response body: ${response.body}");
+
+      switch (response.statusCode) {
+        case 200:
+          var jsonData = jsonDecode(response.body);
+
+          print("[API] Structure JSON reçue: ${jsonData.keys}");
+
+          // ⚡ Ici 'data' est directement un tableau
+          var listData = jsonData['data'] as List;
+
+          apiResponse.data = {
+            "products": listData.map((p) => Product.fromJson(p)).toList(),
+            "currentPage": jsonData['meta']['current_page'],
+            "lastPage": jsonData['meta']['last_page'],
+          };
+
+          print("[API] Produits reçus: ${listData.length}, "
+              "page ${jsonData['meta']['current_page']}/${jsonData['meta']['last_page']}");
+          break;
+
+        case 401:
+          apiResponse.error = unauthorized;
+          print("[API] Erreur 401 : Token expiré ou invalide");
+          break;
+
+        default:
+          apiResponse.error = somethingWentWrong;
+          print(
+              "[API] Erreur inconnue (${response.statusCode}) : ${response.body}");
+      }
+    } catch (e, stack) {
+      apiResponse.error = serverError;
+      print("[API] Exception attrapée: $e");
+      print("[API] Stacktrace: $stack");
+    }
+
+    return apiResponse;
+  }
+
   Future<ApiResponse> aliasProducts(String alias) async {
     ApiResponse apiResponse = ApiResponse();
     try {

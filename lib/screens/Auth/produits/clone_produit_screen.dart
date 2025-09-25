@@ -40,13 +40,18 @@ class _CloneProduitScreenState extends State<CloneProduitScreen> {
     List<dynamic> data;
     AlertComponent().loading();
     ApiResponse response = await CloneProductService().storeClone(
-        widget.product.id,
-        _nomController.text,
-        _soustitreController.text,
-        _descriptionController.text,
-        _prixController.text,
-        _contactController.text,
-        int.parse(_prixController.text));
+      widget.product.id,
+      _nomController.text,
+      _soustitreController.text,
+      _descriptionController.text,
+      _prixController.text,
+      _contactController.text,
+      int.parse(_prixController.text),
+      // 🆕 Ajouts obligatoires
+      widget.product.isWinningProduct ?? false,
+      widget.product.winningBonusAmount ?? 0,
+    );
+
     AlertComponent().endLoading();
 
     if (response.error == null) {

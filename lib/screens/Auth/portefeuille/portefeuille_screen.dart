@@ -42,24 +42,32 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
   bool tabactive = false;
   List<Retrait> lesRetraits = [];
 
-  //portefeuille
+  // portefeuille
   Future<void> wallet() async {
     ApiResponse response = await walletService.getWallet();
     if (response.error == null) {
       dynamic data = response.data;
 
-      setState(() {
-        _wallet = Wallet.fromJson(data['wallet']);
+      print("=== DATA PASSED TO setState ===");
+      print(jsonEncode(data));
 
-        if (data.containsKey('transactions') && data['transactions'] is List) {
-          _transactions = (data['transactions'] as List)
+      setState(() {
+        _wallet = Wallet.fromJson({
+          ...data['wallet'],
+          "winning_wallet": data['winning_wallet'],
+        });
+
+        if (data['transactions'] is Map) {
+          final txData = data['transactions']['data'] ?? [];
+          _transactions = (txData as List)
               .map((item) => Transaction.fromJson(item))
               .toList();
-          print(
-              "== transactions ${jsonEncode(_transactions.map((transaction) => transaction.toJson()).toList())}");
         } else {
           _transactions = [];
         }
+
+        print("=== TRANSACTIONS AFTER PARSING ===");
+        print(jsonEncode(_transactions.map((t) => t.toJson()).toList()));
 
         _loading = false;
       });
@@ -171,7 +179,8 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                             padding: EdgeInsets.zero,
                             width: MediaQuery.of(context).size.width,
                             child: Container(
-                              height: 120,
+                              height:
+                                  140, // 🔥 augmenté un peu pour laisser de la place à "A recevoir"
                               alignment: Alignment.center,
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 25),
@@ -193,7 +202,7 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                               ),
                               child: Stack(
                                 children: [
-                                  //total
+                                  // total
                                   const Positioned(
                                     top: 15,
                                     left: 20,
@@ -217,6 +226,8 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               Text(
                                                 formatAmount(
@@ -227,15 +238,12 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                              Container(
-                                                height: 20,
-                                                alignment: Alignment.bottomLeft,
-                                                child: const Text(
-                                                  '    Fr',
-                                                  style: TextStyle(
-                                                    color: colorBlue,
-                                                    fontSize: 14,
-                                                  ),
+                                              const SizedBox(width: 4),
+                                              const Text(
+                                                'CFA',
+                                                style: TextStyle(
+                                                  color: colorBlue,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ],
@@ -247,8 +255,8 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           PortefeuilleRetraitScreen(
-                                                              amount: _wallet
-                                                                  .amount),
+                                                        amount: _wallet.amount,
+                                                      ),
                                                     ),
                                                   ),
                                                   child: Container(
@@ -270,17 +278,45 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                                                     ),
                                                   ),
                                                 )
-                                              : Container()
+                                              : Container(),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  //date dernier transaction
+                                  // 👇 Ajout du "A recevoir"
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 20,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Gain clic à recevoir",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color.fromARGB(255, 10, 2,
+                                                119), // gris discret
+                                          ),
+                                        ),
+                                        Text(
+                                          "+ ${formatAmount(_wallet.soldeEnAttente)} ", // ✅ utilise le nouveau champ
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color:
+                                                colorBlue, // bleu identique au Total
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                         ),
+
                         //back
                         Positioned(
                           top: 30,
@@ -660,10 +696,18 @@ class _PortefeuilleScreenState extends State<PortefeuilleScreen> {
                                         );
                                       },
                                       itemBuilder: (context, element) {
+                                        final imageUrl = element.order?.items
+                                                        .isNotEmpty ==
+                                                    true &&
+                                                element.order?.items[0].product
+                                                        ?.images.isNotEmpty ==
+                                                    true
+                                            ? element.order!.items[0].product!
+                                                .images[0]
+                                            : "https://daymondboutique.com/assets/def.png"; // ✅ fallback
+
                                         return kCardTransaction(
-                                            element,
-                                            element.order?.items[0].product
-                                                ?.images[0]);
+                                            element, imageUrl);
                                       }),
                                   ListRetraitsWidget(retraits: lesRetraits),
                                 ],

@@ -3,6 +3,7 @@ import 'package:distribution_frontend/constante.dart';
 import 'package:distribution_frontend/screens/Auth/clone/clone_screen.dart';
 import 'package:distribution_frontend/screens/Auth/commandes/menu_commande_screen.dart';
 import 'package:distribution_frontend/screens/Auth/historique_screen.dart';
+import 'package:distribution_frontend/screens/Auth/mes_clics_screen.dart.dart';
 import 'package:distribution_frontend/screens/Auth/portefeuille/portefeuille_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
 import 'package:distribution_frontend/services/commande_service.dart';
@@ -282,6 +283,129 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.asset(
+                                            'assets/images/Bonus.png',
+                                            height: 36,
+                                            width: 36,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            'Mes bonus',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    // ignore: sort_child_properties_last
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: colorannule,
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      child: Text(
+                                        _favoriteCount.toString(),
+                                        style:
+                                            const TextStyle(color: colorwhite),
+                                      ),
+                                    ),
+                                    right: 18,
+                                    top: 10,
+                                  ),
+                                ],
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MesClicsScreen(),
+                                    ),
+                                  ),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/Groupe43.png',
+                                    height: 130,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/main.png',
+                                            height: 35,
+                                            width: 35,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            'Mes clics',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HistoriqueScreen(),
+                                    ),
+                                  ),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/Groupe43.png',
+                                    height: 130,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
                                             'assets/images/favorie_gris.png',
                                             height: 36,
                                             width: 36,
@@ -376,6 +500,7 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                     const SizedBox(
                       height: 15,
                     ),
+                    
                   ],
                 ),
               ),

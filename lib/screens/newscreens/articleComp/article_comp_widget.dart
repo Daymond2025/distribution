@@ -59,6 +59,9 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
       description: product.description ?? '',
       price: product.price.price, // un int (ou double)
       commission: product.price.commission ?? 0,
+      // 🆕 champs obligatoires
+    isWinningProduct: product.isWinningProduct ?? false,
+    winningBonusAmount: product.winningBonusAmount ?? 0,
     );
 
     if (response.error == null) {
@@ -419,37 +422,6 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
               onPressed: () async {
                 await showLienDeVentePopup(context, widget.article);
               },
-
-              //onPressed: () async {
-              //print('Button pressed ...');
-
-              //await showModalBottomSheet(
-              //isScrollControlled: true,
-              //backgroundColor: Colors.transparent,
-              //enableDrag: false,
-              //context: context,
-              //builder: (context) {
-              //return Padding(
-              //padding: MediaQuery.viewInsetsOf(context),
-              //child: Container(
-              //height: MediaQuery.sizeOf(context).height * 0.9,
-              //child: PersoCompWidget(
-              //product: widget!.article,
-              //),
-              //),
-              //);
-              //},
-              //).then((value) => safeSetState(() {}));
-
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ClickProduit(
-              //       product: this.widget.article,
-              //     ),
-              //   ),
-              // );
-              //,
               text: 'Vendre ce produit',
               options: FFButtonOptions(
                 width: double.infinity,

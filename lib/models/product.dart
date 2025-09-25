@@ -41,6 +41,10 @@ class Product {
   String createdAtFr;
   String updatedAtFr;
 
+  // 🆕 Champs pour clic25
+  bool isWinningProduct;
+  int? winningBonusAmount;
+
   Product({
     required this.id,
     required this.name,
@@ -70,6 +74,9 @@ class Product {
     required this.updatedAt,
     required this.createdAtFr,
     required this.updatedAtFr,
+    //Ajout de champs pour clic25  🆕
+    required this.isWinningProduct,
+    this.winningBonusAmount,
   });
 
   Map<String, dynamic> toJson() {
@@ -108,6 +115,9 @@ class Product {
       'updatedAt': updatedAt,
       'createdAtFr': createdAtFr,
       'updatedAtFr': updatedAtFr,
+      // 🆕
+      'is_winning_product': isWinningProduct,
+      'winning_bonus_amount': winningBonusAmount,
     };
   }
 
@@ -140,6 +150,9 @@ class Product {
       updatedAt: json['updated_at'] ?? '',
       createdAtFr: json['created_at_fr'] ?? '',
       updatedAtFr: json['updated_at_fr'] ?? '',
+      // 🆕
+      isWinningProduct: json['is_winning_product'] ?? false,
+      winningBonusAmount: json['winning_bonus_amount'],
     );
   }
 }

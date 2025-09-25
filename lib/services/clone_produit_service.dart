@@ -7,7 +7,7 @@ import 'package:distribution_frontend/services/user_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:distribution_frontend/api_response.dart';
 import 'package:flutter/services.dart'; // pour Clipboard
-import 'package:jwt_decoder/jwt_decoder.dart';
+//import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CloneProductService {
@@ -86,41 +86,43 @@ class CloneProductService {
     required String description,
     required num price,
     required int commission,
+    required bool isWinningProduct, // ✅ nouveau paramètre
+    required num winningBonusAmount, // ✅ nouveau paramètre
   }) async {
     ApiResponse apiResponse = ApiResponse();
 
-    // 🔢 Conversion du prix en String
     String priceStr = price.toString();
-    print("Prix reçu en num : $price");
-    print("Prix converti en string : $priceStr");
+    print("🔢 [CLONE] Prix reçu: $price | Converti en string: $priceStr");
 
     try {
       // 🔐 Récupérer le token
       String token = await getToken();
-      print("TOKEN RÉCUPÉRÉ : $token");
+      print("🔑 [CLONE] TOKEN récupéré : $token");
 
-      // 🔍 Corriger le format s’il contient un pipe '|'
       if (token.contains('|')) {
         token = token.split('|')[1];
+        print("⚠️ [CLONE] Token corrigé (pipe détecté) : $token");
       }
 
-      // 📦 Chercher le numéro localement
+      // 📦 Récupérer le numéro
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? phoneNumber = prefs.getString('phone_number');
+      print("📞 [CLONE] Numéro local récupéré: $phoneNumber");
 
-      // 🔄 Sinon on appelle l’API
       if (phoneNumber == null || phoneNumber.isEmpty) {
+        print("📡 [CLONE] Numéro introuvable en local → appel API");
         phoneNumber = await getPhoneNumber(token);
+        print("📞 [CLONE] Numéro récupéré via API: $phoneNumber");
       }
 
-      // ❌ Si toujours pas trouvé
       if (phoneNumber == null || phoneNumber.isEmpty) {
+        print("❌ [CLONE] Aucun numéro trouvé !");
         apiResponse.error =
             "Erreur : Numéro de téléphone introuvable. Veuillez vous reconnecter.";
         return apiResponse;
       }
 
-      // 🚀 Requête de clonage
+      // 🚀 Requête API
       final response = await http.post(
         Uri.parse('${baseURL}seller/share/product'),
         headers: {
@@ -135,22 +137,97 @@ class CloneProductService {
           'price': priceStr,
           'phone_number_customer': phoneNumber,
           'commission': commission.toString(),
+          'is_winning_product': isWinningProduct ? '1' : '0',
+          'winning_bonus_amount':
+              isWinningProduct ? winningBonusAmount.toString() : '0',
         },
       );
 
-      print("BODY /seller/share/product : ${response.body}");
+      print("📤 [CLONE] Body envoyé à l'API : {"
+          "product_id: $productId, "
+          "title: $title, "
+          "sub_title: $subTitle, "
+          "description: $description, "
+          "price: $priceStr, "
+          "phone_number_customer: $phoneNumber, "
+          "commission: $commission, "
+          "is_winning_product: ${isWinningProduct ? '1' : '0'}, "
+          "winning_bonus_amount: ${isWinningProduct ? winningBonusAmount : 0}"
+          "}");
+
+      print(
+          "📥 [CLONE] Réponse API [${response.statusCode}] : ${response.body}");
 
       switch (response.statusCode) {
         case 201:
           final body = jsonDecode(response.body);
-          final link = body['message']; // ✅ Le lien est ici
+
+          // le lien est bien dans "message"
+          final link = body['message'];
 
           if (link != null && link is String && link.isNotEmpty) {
+            // copier dans presse-papiers
             await Clipboard.setData(ClipboardData(text: link));
-            apiResponse.data = link;
+
+            apiResponse.data = link; // ✅ on renvoie le lien ici
             apiResponse.message = "Lien copié avec succès.";
+
+            print("✅ [CLONE] Lien reçu et copié: $link");
           } else {
+            print("⚠️ [CLONE] Aucun lien trouvé dans la réponse: $body");
             apiResponse.error = "Lien introuvable dans la réponse.";
+          }
+          break;
+
+        case 401:
+          print("⛔ [CLONE] Erreur 401: Unauthorized");
+          apiResponse.error = unauthorized;
+          break;
+
+        default:
+          try {
+            final parsed = jsonDecode(response.body);
+            final message = parsed['message'];
+            print("⚠️ [CLONE] Erreur API (${response.statusCode}): $message");
+            apiResponse.error = message ?? somethingWentWrong;
+          } catch (e) {
+            print("💥 [CLONE] Impossible de parser l'erreur: ${response.body}");
+            apiResponse.error = somethingWentWrong;
+          }
+      }
+    } catch (e, stackTrace) {
+      print("💣 [CLONE] Exception: $e");
+      print("📜 [STACKTRACE] $stackTrace");
+      apiResponse.error = 'Une erreur s\'est produite.';
+    }
+
+    return apiResponse;
+  }
+
+  Future<ApiResponse> winningClones() async {
+    ApiResponse apiResponse = ApiResponse();
+    try {
+      String token = await getToken();
+      final response = await http.get(
+        Uri.parse('${baseURL}seller/share/product'), // ✅ endpoint correct
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      print("Statut code winning clones ${response.statusCode}");
+      print("Réponse body: ${response.body}");
+
+      switch (response.statusCode) {
+        case 200:
+          var body = jsonDecode(response.body);
+          if (body['data'] != null) {
+            apiResponse.data = (body['data'] as List)
+                .map((json) => CloneProduct.fromJson(json))
+                .toList();
+          } else {
+            apiResponse.error = "Format inattendu : pas de clé 'data'";
           }
           break;
 
@@ -159,18 +236,16 @@ class CloneProductService {
           break;
 
         default:
-          final message = jsonDecode(response.body)['message'];
-          apiResponse.error = message ?? somethingWentWrong;
+          apiResponse.error = somethingWentWrong;
       }
     } catch (e) {
-      print("Erreur lors du clonage automatique : $e");
-      apiResponse.error = 'Une erreur s\'est produite.';
+      apiResponse.error = e.toString();
     }
 
     return apiResponse;
   }
 
-// 📡 Fonction pour récupérer le numéro via l'API si non présent localement
+  // 📡 Fonction pour récupérer le numéro via l'API si non présent localement
   Future<String?> getPhoneNumber(String token) async {
     try {
       final response = await http.get(
@@ -208,30 +283,37 @@ class CloneProductService {
       String description,
       String price,
       String phoneNumber,
-      int commission) async {
+      int commission,
+      bool isWinningProduct,
+      num winningBonusAmount) async {
     ApiResponse apiResponse = ApiResponse();
     try {
       String token = await getToken();
-      final response = await http
-          .post(Uri.parse('${baseURL}seller/share/product'), headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      }, body: {
-        'product_id': product.toString(),
-        'title': title,
-        'sub_title': subTitle,
-        'description': description,
-        'price': price,
-        'phone_number_customer': phoneNumber,
-        'commission': commission.toString()
-      });
+      final response = await http.post(
+        Uri.parse('${baseURL}seller/share/product'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          'product_id': product.toString(),
+          'title': title,
+          'sub_title': subTitle,
+          'description': description,
+          'price': price,
+          'phone_number_customer': phoneNumber,
+          'commission': commission.toString(),
+          // 🆕 ajout du produit gagnant
+          'is_winning_product': isWinningProduct ? '1' : '0',
+          'winning_bonus_amount':
+              isWinningProduct ? winningBonusAmount.toString() : '0',
+        },
+      );
 
       switch (response.statusCode) {
         case 201:
           apiResponse.data = jsonDecode(response.body)['data'] as dynamic;
           apiResponse.message = jsonDecode(response.body)['message'];
-          apiResponse.message as dynamic;
-
           break;
 
         case 401:

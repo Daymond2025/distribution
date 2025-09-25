@@ -6,6 +6,7 @@ import 'package:distribution_frontend/screens/Auth/menu_activites_screen.dart';
 import 'package:distribution_frontend/screens/Auth/message_screen.dart';
 import 'package:distribution_frontend/screens/Auth/produits/click_produit.dart';
 import 'package:distribution_frontend/screens/Auth/produits/produits_screen.dart';
+import 'package:distribution_frontend/screens/Auth/produits/produits_clic_25.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
 import 'package:distribution_frontend/services/conversation_service.dart';
 import 'package:distribution_frontend/services/home_service.dart';
@@ -185,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> pages = [
     const AccueilScreen(data: []),
     const ProduitsScreen(),
+    const ProduitsClic25Screen(),
     const MenuActivitesScreen(),
     const MessageScreen(),
   ];
@@ -229,33 +231,66 @@ class _HomeScreenState extends State<HomeScreen> {
         iconSize: 24,
         onTap: upDatePage,
         items: [
-          //ACCUEIL
+          // ACCUEIL
           BottomNavigationBarItem(
             icon: SizedBox(
-                width: bottomBarWidth,
-                child: Image.asset(
-                  _page == 0
-                      ? 'assets/images/acceuil_2.png'
-                      : 'assets/images/acceuil_1.png',
-                  width: 25,
-                  height: 25,
-                )),
+              width: bottomBarWidth,
+              child: Image.asset(
+                _page == 0
+                    ? 'assets/images/acceuil_2.png'
+                    : 'assets/images/acceuil_1.png',
+                width: 25,
+                height: 25,
+              ),
+            ),
             label: 'Accueil',
           ),
-          //COMPTE
+
+          // PRODUITS
           BottomNavigationBarItem(
             icon: SizedBox(
-                width: bottomBarWidth,
-                child: Image.asset(
-                  _page == 1
-                      ? 'assets/images/produit_2.png'
-                      : 'assets/images/produit.png',
-                  width: 25,
-                  height: 25,
-                )),
+              width: bottomBarWidth,
+              child: Image.asset(
+                _page == 1
+                    ? 'assets/images/produit_2.png'
+                    : 'assets/images/produit.png',
+                width: 25,
+                height: 25,
+              ),
+            ),
             label: 'Produits',
           ),
-          //COMMANDE
+
+          // MES CLICS
+          BottomNavigationBarItem(
+            icon: Transform.translate(
+              offset: const Offset(
+                  0, 8), // 👉 déplace vers le bas (tu peux ajuster)
+              child: Container(
+                width: 44,
+                height: 43,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(252, 232, 232, 1),
+                  borderRadius: BorderRadius.circular(21.5),
+                  border: Border.all(
+                    width: 5,
+                    color: const Color.fromRGBO(255, 0, 208, 0.17),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Image.asset(
+                  _page == 2
+                      ? 'assets/images/main.png'
+                      : 'assets/images/main.png',
+                  width: 25,
+                  height: 25,
+                ),
+              ),
+            ),
+            label: '',
+          ),
+
+          // ACTIVITÉS
           BottomNavigationBarItem(
             icon: activite > 0
                 ? Stack(
@@ -264,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         alignment: Alignment.center,
                         width: bottomBarWidth,
                         child: Image.asset(
-                          _page == 2
+                          _page == 3
                               ? 'assets/images/activite_2.png'
                               : 'assets/images/activite_1.png',
                           width: 25,
@@ -285,7 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             activite.toString(),
                             style: const TextStyle(
-                                color: colorwhite, fontSize: 12),
+                              color: colorwhite,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ),
@@ -295,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.center,
                     width: bottomBarWidth,
                     child: Image.asset(
-                      _page == 2
+                      _page == 4
                           ? 'assets/images/activite_2.png'
                           : 'assets/images/activite_1.png',
                       width: 25,
@@ -304,7 +341,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
             label: 'Activités',
           ),
-          //MESSAGE
+
+          // MESSAGE
           BottomNavigationBarItem(
             icon: message > 0
                 ? Stack(
@@ -313,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         alignment: Alignment.center,
                         width: bottomBarWidth,
                         child: Image.asset(
-                          _page == 3
+                          _page == 5
                               ? 'assets/images/message_2.png'
                               : 'assets/images/message_1.png',
                           width: 25,
@@ -346,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.center,
                     width: bottomBarWidth,
                     child: Image.asset(
-                      _page == 3
+                      _page == 5
                           ? 'assets/images/message_2.png'
                           : 'assets/images/message_1.png',
                       width: 25,
