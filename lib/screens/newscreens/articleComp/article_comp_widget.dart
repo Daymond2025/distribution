@@ -1,4 +1,3 @@
-import 'package:distribution_frontend/screens/Auth/produits/click_produit.dart';
 import 'package:distribution_frontend/screens/newscreens/persoComp/perso_comp_widget.dart';
 import 'package:distribution_frontend/services/clone_produit_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,8 +8,6 @@ import '../flutter_flow_widgets.dart';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:distribution_frontend/models/product.dart';
 
 import 'article_comp_model.dart';
@@ -50,6 +47,9 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
     super.dispose();
   }
 
+  /// Clone le produit et copie le lien de vente dans le presse-papiers
+  /// TODO: Endpoint API via CloneProductService
+  /// En attente d'endpoint : POST /api/products/clone-and-copy-link
   Future<void> handleCloneAndCopyLink(
       BuildContext context, Product product) async {
     final response = await CloneProductService().cloneAndCopyLink(
@@ -57,11 +57,10 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
       title: product.name ?? '',
       subTitle: product.subTitle ?? '',
       description: product.description ?? '',
-      price: product.price.price, // un int (ou double)
+      price: product.price.price,
       commission: product.price.commission ?? 0,
-      // 🆕 champs obligatoires
-    isWinningProduct: product.isWinningProduct ?? false,
-    winningBonusAmount: product.winningBonusAmount ?? 0,
+      isWinningProduct: product.isWinningProduct ?? false,
+      winningBonusAmount: product.winningBonusAmount ?? 0,
     );
 
     if (response.error == null) {
@@ -84,6 +83,8 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
     }
   }
 
+  /// Affiche le dialogue de création de lien de vente
+  /// Options : Copie rapide ou Personnalisation
   Future<void> showLienDeVentePopup(
       BuildContext context, Product product) async {
     return showDialog(
@@ -97,7 +98,7 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
           backgroundColor: Colors.transparent,
           child: Stack(
             children: [
-              // 🟧 Conteneur principal
+              // Conteneur principal du dialogue
               Container(
                 margin: EdgeInsets.only(top: 12, right: 12),
                 decoration: BoxDecoration(
@@ -119,7 +120,7 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
                     ),
                     SizedBox(height: 32),
 
-                    // ⚡ Copier & ✏️ Personnaliser
+                    // Options : Copie rapide et Personnalisation
                     Row(
                       children: [
                         Expanded(
@@ -243,7 +244,7 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
                 ),
               ),
 
-              // ❌ Bouton de fermeture bien rentré
+              // Bouton de fermeture du dialogue
               Positioned(
                 top: 20,
                 right: 20,
@@ -333,20 +334,23 @@ class _ArticleCompWidgetState extends State<ArticleCompWidget> {
                         ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(97, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Icon(
-                          Icons.star,
-                          color: Color.fromARGB(255, 255, 217, 0),
-                          size: 10,
+                    // Badge étoile pour les produits gagnants
+                    if (this.widget.article.star == 1 ||
+                        this.widget.article.isWinningProduct == true)
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(97, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Icon(
+                            Icons.star,
+                            color: Color.fromARGB(255, 255, 217, 0),
+                            size: 10,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 )
               ],

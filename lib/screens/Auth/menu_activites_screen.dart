@@ -1,12 +1,13 @@
 import 'package:distribution_frontend/api_response.dart';
 import 'package:distribution_frontend/constante.dart';
+import 'package:distribution_frontend/screens/Auth/affiche/affiche_produit_screen.dart';
+import 'package:distribution_frontend/screens/Auth/bonus/mes_bonus_screen.dart';
 import 'package:distribution_frontend/screens/Auth/clone/clone_screen.dart';
 import 'package:distribution_frontend/screens/Auth/commandes/menu_commande_screen.dart';
 import 'package:distribution_frontend/screens/Auth/historique_screen.dart';
 import 'package:distribution_frontend/screens/Auth/mes_clics_screen.dart.dart';
 import 'package:distribution_frontend/screens/Auth/portefeuille/portefeuille_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
-import 'package:distribution_frontend/services/commande_service.dart';
 import 'package:distribution_frontend/services/home_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
 
   bool _noCnx = false;
 
+  /// Charge les compteurs d'activités (commandes, favoris, clones)
+  /// TODO: Endpoint API via HomeService.menu()
+  /// En attente d'endpoint : GET /api/menu
   Future<void> index() async {
     ApiResponse response = await homeService.menu();
     if (response.error == null) {
@@ -113,6 +117,7 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
+                    // Première ligne : Mes commandes et Ma boutique
                     Row(
                       children: [
                         Expanded(
@@ -254,6 +259,7 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                     const SizedBox(
                       height: 15,
                     ),
+                    // Deuxième ligne : Mes bonus et Mes clics
                     Row(
                       children: [
                         Expanded(
@@ -261,11 +267,12 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                           child: InkWell(
                               splashColor: Colors.transparent,
                               highlightColor: Colors.transparent,
+                              // Navigation vers l'écran des bonus
                               onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const HistoriqueScreen(),
+                                          const MesBonusScreen(),
                                     ),
                                   ),
                               child: Stack(
@@ -330,6 +337,7 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                           child: InkWell(
                               splashColor: Colors.transparent,
                               highlightColor: Colors.transparent,
+                              // Navigation vers l'écran des clics
                               onTap: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -377,6 +385,113 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                     const SizedBox(
                       height: 15,
                     ),
+                    // Troisième ligne : Affiche produit et Portefeuille
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              // Navigation vers l'écran des affiches produit
+                              onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AfficheProduitScreen(),
+                                    ),
+                                  ),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/Groupe43.png',
+                                    height: 130,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/afficheproduit.png',
+                                            height: 36,
+                                            width: 36,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            'Affiche produit',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PortefeuilleScreen(),
+                                    ),
+                                  ),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/Groupe43.png',
+                                    height: 130,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/portefeuille_v3.png',
+                                            height: 35,
+                                            width: 35,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            'Portefeuille',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    // Quatrième ligne : Mes favories
                     Row(
                       children: [
                         Expanded(
@@ -448,59 +563,16 @@ class _MenuActivitesScreenState extends State<MenuActivitesScreen> {
                         const SizedBox(
                           width: 15,
                         ),
-                        Expanded(
+                        // Espace vide pour maintenir l'alignement de la grille
+                        const Expanded(
                           flex: 1,
-                          child: InkWell(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PortefeuilleScreen(),
-                                    ),
-                                  ),
-                              child: Stack(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/Groupe43.png',
-                                    height: 130,
-                                    width: MediaQuery.of(context).size.width,
-                                  ),
-                                  Positioned.fill(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/portefeuille_v3.png',
-                                            height: 35,
-                                            width: 35,
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          const Text(
-                                            'Mon portefeuille',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
+                          child: SizedBox(),
                         ),
                       ],
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                    
                   ],
                 ),
               ),

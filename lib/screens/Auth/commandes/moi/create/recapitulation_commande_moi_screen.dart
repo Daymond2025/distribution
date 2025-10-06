@@ -5,7 +5,6 @@ import 'package:distribution_frontend/screens/Auth/produits/click_produit.dart';
 import 'package:distribution_frontend/screens/home_screen.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
 import 'package:distribution_frontend/services/commande_service.dart';
-import 'package:distribution_frontend/services/transaction_service.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -49,6 +48,7 @@ class _RecapitulationCommandeMoiScreenState
 
   String name = '';
 
+  /// Récupère le nom du vendeur depuis les préférences
   Future<void> getName() async {
     String nom;
     nom = await getVendeurName();
@@ -58,6 +58,7 @@ class _RecapitulationCommandeMoiScreenState
     });
   }
 
+  /// Affiche l'indicateur de chargement
   chargementAlert() {
     EasyLoading.instance
       ..displayDuration = const Duration(milliseconds: 2000)
@@ -74,6 +75,7 @@ class _RecapitulationCommandeMoiScreenState
     );
   }
 
+  /// Affiche une alerte d'erreur
   errorAlert(String text) {
     var alertStyle = AlertStyle(
         animationType: AnimationType.fromTop,
@@ -104,6 +106,9 @@ class _RecapitulationCommandeMoiScreenState
     ).show();
   }
 
+  /// Crée et envoie la commande au serveur
+  /// TODO: Endpoint API via storeCommandeMoi
+  /// En attente d'endpoint : POST /api/orders
   Future<void> createCommand() async {
     ApiResponse response = await storeCommandeMoi(
       _product.id.toString(),
@@ -130,6 +135,7 @@ class _RecapitulationCommandeMoiScreenState
     } else {}
   }
 
+  /// Affiche le dialogue de confirmation de commande envoyée
   Future showDialogConfirmation() => showDialog(
         context: context,
         builder: (context) => StatefulBuilder(
@@ -234,6 +240,7 @@ class _RecapitulationCommandeMoiScreenState
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: Column(
             children: [
+              // Section récapitulatif du produit et des montants
               Container(
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
@@ -585,6 +592,7 @@ class _RecapitulationCommandeMoiScreenState
               const SizedBox(
                 height: 10,
               ),
+              // Section informations de livraison
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 width: MediaQuery.of(context).size.width,
@@ -717,6 +725,7 @@ class _RecapitulationCommandeMoiScreenState
               const SizedBox(
                 height: 10,
               ),
+              // Section détails supplémentaires
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 width: MediaQuery.of(context).size.width,
@@ -762,6 +771,7 @@ class _RecapitulationCommandeMoiScreenState
         color: colorfond,
         width: MediaQuery.of(context).size.width,
         child: InkWell(
+          // Validation et envoi de la commande
           onTap: () {
             chargementAlert();
             createCommand();
@@ -785,6 +795,7 @@ class _RecapitulationCommandeMoiScreenState
     );
   }
 
+  /// Affiche le dialogue quand le solde est suffisant pour le paiement
   Future showDialogSoldeSuffisant() => showDialog(
         context: context,
         builder: (context) => StatefulBuilder(
@@ -933,6 +944,7 @@ class _RecapitulationCommandeMoiScreenState
         ),
       );
 
+  /// Affiche le dialogue quand le solde est insuffisant pour le paiement
   Future showDialogSoldeInsuffisant() => showDialog(
         context: context,
         builder: (context) => StatefulBuilder(

@@ -26,14 +26,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize notifications lorsque l'app est lancé pour la première fois , ou lors de la mise a jour de l'app
   await FirebaseApi().initNotifications();
-
-  
 
   final appLinks = AppLinks(); // AppLinks is singleton
 
@@ -44,9 +40,7 @@ void main() async {
   });
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SellerProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => SellerProvider())],
       child: const MyApp(),
     ),
   );
@@ -67,7 +61,6 @@ class _MyAppState extends State<MyApp> {
     _checkForMandatoryUpdate(); // 👈 Appel de la vérification au démarrage
     // openAppSettings();
   }
-
 
   // Verifier si il y a une mise a jour
   Future<void> _checkForMandatoryUpdate() async {
@@ -107,9 +100,7 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('fr', ''),
-      ],
+      supportedLocales: const [Locale('fr', '')],
       debugShowCheckedModeBanner: false,
       initialRoute: LoadingScreen.routeName,
       navigatorKey: navigatorKey,

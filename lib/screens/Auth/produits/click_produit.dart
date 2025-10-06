@@ -6,7 +6,6 @@ import 'package:distribution_frontend/models/product.dart';
 import 'package:distribution_frontend/screens/Auth/commandes/client/create/formulaire_commande_screen.dart';
 import 'package:distribution_frontend/screens/Auth/commandes/moi/create/detail_commande_moi_screen.dart';
 import 'package:distribution_frontend/screens/Auth/historique_screen.dart';
-import 'package:distribution_frontend/screens/Auth/produits/clone_produit_screen.dart';
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_icon_button.dart';
 import 'package:distribution_frontend/screens/newscreens/flutter_flow_util.dart';
 import 'package:distribution_frontend/screens/newscreens/persoComp/perso_comp_widget.dart';
@@ -23,14 +22,12 @@ import 'package:distribution_frontend/widgets/image_view.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:gallery_saver/gallery_saver.dart';
 import 'package:intl/intl.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:app_settings/app_settings.dart';
-import 'package:http/http.dart' as http;
 import 'package:distribution_frontend/services/clone_produit_service.dart';
+import 'package:distribution_frontend/widgets/dialog_choix_commande.dart';
+import 'package:distribution_frontend/widgets/dialog_choix_localisation.dart';
 
 class ClickProduit extends StatefulWidget {
   const ClickProduit({super.key, this.product});
@@ -279,6 +276,9 @@ class _ClickProduitState extends State<ClickProduit> {
     getProfiles();
   }
 
+  /// Clone le produit et copie le lien de vente dans le presse-papiers
+  /// TODO: Endpoint API via CloneProductService
+  /// En attente d'endpoint : POST /api/products/clone-and-copy-link
   Future<void> handleCloneAndCopyLink(
       BuildContext context, Product product) async {
     final response = await CloneProductService().cloneAndCopyLink(
@@ -286,9 +286,8 @@ class _ClickProduitState extends State<ClickProduit> {
       title: product.name ?? '',
       subTitle: product.subTitle ?? '',
       description: product.description ?? '',
-      price: product.price.price, // un int (ou double)
+      price: product.price.price,
       commission: product.price.commission ?? 0,
-      // 🆕 champs obligatoires
       isWinningProduct: product.isWinningProduct ?? false,
       winningBonusAmount: product.winningBonusAmount ?? 0,
     );
@@ -313,6 +312,8 @@ class _ClickProduitState extends State<ClickProduit> {
     }
   }
 
+  /// Affiche le dialogue de création de lien de vente
+  /// Options : Copie rapide ou Personnalisation
   Future<void> showLienDeVentePopup(
       BuildContext context, Product product) async {
     return showDialog(
@@ -326,7 +327,7 @@ class _ClickProduitState extends State<ClickProduit> {
           backgroundColor: Colors.transparent,
           child: Stack(
             children: [
-              // 🟧 Conteneur principal
+              // Conteneur principal du dialogue
               Container(
                 margin: EdgeInsets.only(top: 12, right: 12),
                 decoration: BoxDecoration(
@@ -348,7 +349,7 @@ class _ClickProduitState extends State<ClickProduit> {
                     ),
                     SizedBox(height: 32),
 
-                    // ⚡ Copier & ✏️ Personnaliser
+                    // Options : Copie rapide et Personnalisation
                     Row(
                       children: [
                         Expanded(
@@ -472,7 +473,7 @@ class _ClickProduitState extends State<ClickProduit> {
                 ),
               ),
 
-              // ❌ Bouton de fermeture bien rentré
+              // Bouton de fermeture du dialogue
               Positioned(
                 top: 20,
                 right: 20,
@@ -1665,17 +1666,46 @@ class _ClickProduitState extends State<ClickProduit> {
                   Expanded(
                     flex: 6,
                     child: InkWell(
-                      onTap: () {
-                        //showDialogType();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FormulaireCommandeScreen(
-                              product: _product,
-                              category: 'client',
+                      onTap: () async {
+                        // Étape 1 : Sélection du type de commande (client ou moi)
+                        final typeCommande =
+                            await showDialogChoixCommande(context);
+
+                        if (typeCommande == null) return;
+
+                        if (typeCommande == 'client') {
+                          // Navigation vers le formulaire de commande client
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FormulaireCommandeScreen(
+                                product: _product,
+                                category: 'client',
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else if (typeCommande == 'moi') {
+                          // Étape 2 : Sélection de la zone de livraison
+                          final zonelivraison =
+                              await showDialogChoixLocalisation(
+                            context,
+                            prixAbidjan: _product.delivery.city,
+                            prixHorsAbidjan: _product.delivery.noCity,
+                          );
+
+                          if (zonelivraison == null) return;
+
+                          // Navigation vers le détail de commande personnelle
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailCommandeMoiScreen(
+                                product: _product,
+                                category: 'moi',
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -1705,17 +1735,10 @@ class _ClickProduitState extends State<ClickProduit> {
                   Expanded(
                     flex: 5,
                     child: InkWell(
+                      // Affiche le dialogue de création de lien de vente
                       onTap: () async {
                         await showLienDeVentePopup(context, _product);
                       },
-                      //  () => Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         CloneProduitScreen(product: _product),
-                      //   ),
-                      // )
-
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: 35,

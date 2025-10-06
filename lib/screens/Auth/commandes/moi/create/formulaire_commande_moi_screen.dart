@@ -8,9 +8,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:distribution_frontend/api_response.dart';
 import 'package:distribution_frontend/services/user_service.dart';
 import 'package:distribution_frontend/screens/login_screen.dart';
-import 'package:distribution_frontend/services/produit_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:distribution_frontend/widgets/select_ambassador.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class FormulaireCommandeMoiScreen extends StatefulWidget {
   const FormulaireCommandeMoiScreen(
@@ -32,6 +34,8 @@ class _FormulaireCommandeMoiScreenState
   final TextEditingController _autreController = TextEditingController();
   DateTime dateTime = DateTime.now();
 
+  String _userPhoneNumber = '';
+
   bool opentaille = false;
   String taille = '';
 
@@ -44,12 +48,89 @@ class _FormulaireCommandeMoiScreenState
   final bool _noCnx = false;
 
   int _ambassadorId = 0;
-  String _ambassadorCompany = '';
 
   int unitPriceDelivery = 0;
   String cityId = '';
 
-  //show transaction
+  /// Formate le numéro de téléphone avec des espaces (ex: +225 07 59 85 45)
+  String _formatPhoneNumber(String phone) {
+    if (phone.startsWith('+225')) {
+      String withoutCountryCode = phone.substring(4);
+      withoutCountryCode = withoutCountryCode.replaceAll(' ', '');
+
+      // Formatage avec espaces tous les 2 caractères
+      String formatted = '';
+      for (int i = 0; i < withoutCountryCode.length; i += 2) {
+        if (i + 2 <= withoutCountryCode.length) {
+          formatted += withoutCountryCode.substring(i, i + 2);
+          if (i + 2 < withoutCountryCode.length) {
+            formatted += ' ';
+          }
+        } else {
+          formatted += withoutCountryCode.substring(i);
+        }
+      }
+
+      return '+225 $formatted';
+    }
+    return phone;
+  }
+
+  /// Récupère le numéro de téléphone de l'utilisateur
+  /// Vérifie d'abord localement, puis appelle l'API si nécessaire
+  /// TODO: Endpoint API utilisé : GET /seller/phone_number/main
+  Future<void> getUserPhoneNumber() async {
+    try {
+      // Récupération depuis le cache local
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? phoneNumber = prefs.getString('phone_number');
+
+      if (phoneNumber != null && phoneNumber.isNotEmpty) {
+        setState(() {
+          _userPhoneNumber = _formatPhoneNumber(phoneNumber);
+        });
+        return;
+      }
+
+      // Appel API si non disponible localement
+      String token = await getToken();
+      final response = await http.get(
+        Uri.parse('${baseURL}seller/phone_number/main'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final phone = data['phone_number'];
+
+        if (phone != null && phone is String && phone.isNotEmpty) {
+          // Mise en cache pour utilisation future
+          await prefs.setString('phone_number', phone);
+          setState(() {
+            _userPhoneNumber = _formatPhoneNumber(phone);
+          });
+        } else {
+          setState(() {
+            _userPhoneNumber = 'Non disponible';
+          });
+        }
+      } else {
+        setState(() {
+          _userPhoneNumber = 'Non disponible';
+        });
+      }
+    } catch (e) {
+      print('Erreur lors de la récupération du numéro: $e');
+      setState(() {
+        _userPhoneNumber = 'Non disponible';
+      });
+    }
+  }
+
+  /// Navigation vers l'écran de récapitulation de la commande
   Future<void> recapitulationCommande() async {
     if (cityId == '') {
       return;
@@ -74,6 +155,7 @@ class _FormulaireCommandeMoiScreenState
     );
   }
 
+  /// Affiche l'indicateur de chargement
   chargementAlert() {
     EasyLoading.instance
       ..displayDuration = const Duration(milliseconds: 2000)
@@ -90,6 +172,7 @@ class _FormulaireCommandeMoiScreenState
     );
   }
 
+  /// Affiche le dialogue de sélection de ville
   void _showMultipleSelect() async {
     List<String> data = [];
     final results = await showDialog(
@@ -108,17 +191,15 @@ class _FormulaireCommandeMoiScreenState
 
         if (data.length > 3) {
           _ambassadorId = int.parse(results[3]);
-          _ambassadorCompany = '${results[4]} ${results[5]}';
         } else {
           _ambassadorId = 0;
-          _ambassadorCompany =
-              results[2] == 'true' ? 'Livraison à domicile' : '';
         }
       });
-    } else {}
+    }
   }
 
-  //initialize
+  /// Charge la liste des villes et points focaux
+  /// TODO: Endpoint API via CityService
   List<City> cities = [];
   getCities() async {
     ApiResponse response = await CityService().getCityAndFocalPoint();
@@ -139,7 +220,18 @@ class _FormulaireCommandeMoiScreenState
   @override
   void initState() {
     getCities();
+    getUserPhoneNumber();
+    _initializeDateTime();
     super.initState();
+  }
+
+  /// Initialise la date et l'heure avec les valeurs actuelles
+  void _initializeDateTime() {
+    final now = DateTime.now();
+    _date =
+        '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}';
+    _heure =
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -148,17 +240,23 @@ class _FormulaireCommandeMoiScreenState
         ? Scaffold(
             backgroundColor: colorfond,
             appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(50.0),
+              preferredSize: const Size.fromHeight(53.0),
               child: AppBar(
                 leadingWidth: 40,
                 backgroundColor: colorwhite,
-                elevation: 0.0,
+                elevation: 3,
+                shadowColor: Colors.black.withOpacity(0.16),
                 iconTheme: const IconThemeData(
                   color: Colors.black87,
                 ),
                 title: const Text(
                   'Formulaire de commande',
-                  style: TextStyle(color: colorblack),
+                  style: TextStyle(
+                    fontFamily: 'Segoe UI',
+                    color: colorblack,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
@@ -167,636 +265,322 @@ class _FormulaireCommandeMoiScreenState
                 key: _formKey,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 120,
-                  margin: const EdgeInsets.all(8.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10.5, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(7),
                     color: colorwhite,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height - 200,
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Section : Numéro de contact de l'utilisateur
+                        const Text(
+                          'Votre contact',
+                          style: TextStyle(
+                            fontFamily: 'Segoe UI',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorblack,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
                           children: [
-                            //taille
-                            widget.product.sizes.isNotEmpty
-                                ? InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        opentaille = !opentaille;
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 20),
-                                      decoration: BoxDecoration(
-                                        color: colorwhite,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            width: 1, color: Colors.black26),
-                                      ),
-                                      child: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Taille du produit'),
-                                          const Icon(Icons.arrow_drop_down)
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                            opentaille
-                                ? Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: colorwhite,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.only(top: 8),
-                                    child: widget.product.sizes.isNotEmpty
-                                        ? Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 20),
-                                            child: GridView.builder(
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              gridDelegate:
-                                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                crossAxisSpacing: 12.0,
-                                                mainAxisSpacing: 12.0,
-                                                mainAxisExtent: 20,
-                                              ),
-                                              itemCount:
-                                                  widget.product.sizes.length,
-                                              itemBuilder: (_, index) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      taille = widget
-                                                          .product.sizes
-                                                          .elementAt(index);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.zero,
-                                                    alignment: Alignment.center,
-                                                    color: taille ==
-                                                            widget.product.sizes
-                                                                .elementAt(
-                                                                    index)
-                                                        ? Colors.amber
-                                                        : Colors.transparent,
-                                                    child: Text(
-                                                      widget.product.sizes
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        : Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: const Text(
-                                                'Pas de taille disponible'),
-                                          ),
-                                  )
-                                : Container(),
-                            /*const SizedBox(
-                        height: 8,
-                      ),
-                      //couleur
-                      widget.product.colors.isNotEmpty
-                          ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            opencouleur = !opencouleur;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: colorwhite,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                width: 1, color: Colors.black26),
-                          ),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text('Selectionnez la couleur du produit'),
-                              Icon(Icons.arrow_drop_down)
-                            ],
-                          ),
-                        ),
-                      )
-                          : Container(),
-                      opencouleur
-                          ? Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: colorwhite,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.only(top: 8),
-                        child: widget.product.colors.isNotEmpty
-                            ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: GridView.builder(
-                            physics:
-                            const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 12.0,
-                              mainAxisSpacing: 12.0,
-                              mainAxisExtent: 20,
-                            ),
-                            itemCount: widget.product.colors.length,
-                            itemBuilder: (_, index) {
-                              return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    couleur = widget.product.colors
-                                        .elementAt(index).name;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.center,
-                                  color: couleur ==
-                                      widget.product.colors.elementAt(
-                                          index).name
-                                      ? Colors.amber
-                                      : Colors.transparent,
-                                  child: Text(
-                                    widget.product.colors
-                                        .elementAt(index).name,
-                                    style: const TextStyle(
-                                        fontSize: 20),
-                                  ),
+                            Expanded(
+                              child: Text(
+                                _userPhoneNumber.isEmpty
+                                    ? 'Chargement...'
+                                    : _userPhoneNumber,
+                                style: const TextStyle(
+                                  fontFamily: 'Segoe UI',
+                                  fontSize: 16,
+                                  color: Color(0xFF707070),
                                 ),
-                              );
-                            },
-                          ),
-                        )
-                            : Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10),
-                          child: const Text(
-                              'Pas de taille disponible'),
-                        ),
-                      )
-                          : Container(),*/
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: EdgeInsets.zero,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: const BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 1, color: Colors.black12))),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    height: 20,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 0),
-                                    child: const Text(
-                                      'Votre contact',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    keyboardType: TextInputType.phone,
-                                    controller: _contactController,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black54,
-                                      height: 1,
-                                    ),
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      isDense: true,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(
-                                          bottom: 5, top: 15, left: 10),
-                                      suffix: Icon(
-                                        Icons.edit,
-                                        size: 15,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Le champs ne peut pas être vide!';
-                                      } else if (value.length < 10 ||
-                                          value.length >= 11) {
-                                        return 'Le numéro doit comporter 10 chiffres!';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
                               ),
                             ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border:
-                                    Border.all(width: 1, color: Colors.black26),
-                              ),
-                              child: GestureDetector(
-                                onTap: () => _showMultipleSelect(),
-                                child: _lieuController.text == ''
-                                    ? Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 15,
-                                          horizontal: 0,
-                                        ),
-                                        width: MediaQuery.sizeOf(context).width,
-                                        decoration: BoxDecoration(
-                                          color: colorwhite,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: const Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                'Selectionnez votre localisation',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Color.fromARGB(
-                                                      255, 104, 104, 104),
-                                                ),
-                                              ),
-                                            ),
-                                            Icon(Icons.arrow_drop_down),
-                                          ],
-                                        ),
-                                      )
-                                    : Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                          horizontal: 0,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: colorwhite,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    'Votre localisation',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Color.fromARGB(
-                                                          255, 104, 104, 104),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Icon(Icons.arrow_drop_down),
-                                              ],
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.only(top: 8),
-                                              child: Text(
-                                                _lieuController.text,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: Color.fromARGB(
-                                                      255, 49, 49, 49),
-                                                ),
-                                              ),
-                                            ),
-                                            _ambassadorCompany != ''
-                                                ? Text(
-                                                    _ambassadorCompany,
-                                                    style: const TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.blue,
-                                                    ),
-                                                  )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 0),
-                                    child: const Text(
-                                      'Date et heure de livraison',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 8,
-                                      right: 10,
-                                      left: 10,
-                                      bottom: 10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: InkWell(
-                                            onTap: () async {
-                                              final date =
-                                                  await pickDate(dateTime);
-                                              if (date == null) return;
-                                              final newDateTime = DateTime(
-                                                date.year,
-                                                date.month,
-                                                date.day,
-                                                dateTime.hour,
-                                                dateTime.minute,
-                                              );
-                                              setState(() {
-                                                dateTime = newDateTime;
-                                                _date =
-                                                    '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-                                              });
-                                            },
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    border: Border(
-                                                      bottom: BorderSide(
-                                                        width: 1,
-                                                        color: Colors.black12,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.date_range,
-                                                        color: colorBlue,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}',
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  right: 0,
-                                                  child: Image.asset(
-                                                    'assets/images/link_icon.jpg',
-                                                    width: 5,
-                                                    height: 5,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const Expanded(
-                                          flex: 2,
-                                          child: Text(''),
-                                        ),
-                                        Expanded(
-                                          flex: 4,
-                                          child: InkWell(
-                                            onTap: () async {
-                                              final time =
-                                                  await pickTime(dateTime);
-                                              if (time == null) return;
-
-                                              final newDateTime = DateTime(
-                                                dateTime.year,
-                                                dateTime.month,
-                                                dateTime.day,
-                                                time.hour,
-                                                time.minute,
-                                              );
-
-                                              setState(() {
-                                                dateTime = newDateTime;
-                                                _heure =
-                                                    '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-                                              });
-                                            },
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    border: Border(
-                                                      bottom: BorderSide(
-                                                        width: 1,
-                                                        color: Colors.black12,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.timer_outlined,
-                                                        color: colorBlue,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        '${dateTime.hour.toString().padLeft(2, '0')}h ${dateTime.minute.toString().padLeft(2, '0')}',
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  right: 0,
-                                                  child: Image.asset(
-                                                    'assets/images/link_icon.jpg',
-                                                    width: 5,
-                                                    height: 5,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: EdgeInsets.zero,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: const BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 1, color: Colors.black12))),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 0),
-                                    child: const Text(
-                                      'Autre détails',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    minLines: 2,
-                                    maxLines: 3,
-                                    controller: _autreController,
-                                    style: const TextStyle(
-                                        fontSize: 15, color: Colors.black45),
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      contentPadding:
-                                          EdgeInsets.only(bottom: 0, top: 0),
-                                    ),
-                                  )
-                                ],
+                            GestureDetector(
+                              onTap: () {
+                                _showEditPhoneDialog();
+                              },
+                              child: const Icon(
+                                Icons.edit,
+                                size: 18,
+                                color: Color(0xFF707070),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      Container(
-                        color: colorfond,
-                        width: MediaQuery.of(context).size.width,
-                        child: TextButton(
-                          onPressed: () {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
+                        const SizedBox(height: 24),
 
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
-                            if (_formKey.currentState!.validate()) {
-                              if (_date != '' &&
-                                  _heure != '' &&
-                                  _lieuController.text != '') {
-                                chargementAlert();
-                                recapitulationCommande();
-                              } else if (_date == '') {
-                                Fluttertoast.showToast(
-                                    msg: 'Sélectionnez la date svp!',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              } else if (_heure == '') {
-                                Fluttertoast.showToast(
-                                    msg: 'Sélectionnez l\'heure svp!',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: 'Sélectionnez le lieu svp!',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              }
-                            }
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.all(8),
-                            width: MediaQuery.of(context).size.width,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: colorYellow2,
+                        // Section : Sélection du lieu de livraison
+                        const Text(
+                          'Lieux de livraison',
+                          style: TextStyle(
+                            fontFamily: 'Segoe UI',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorblack,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.product.shop.city.name,
+                                style: const TextStyle(
+                                  fontFamily: 'Segoe UI',
+                                  fontSize: 16,
+                                  color: Color(0xFF707070),
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              'RECAPITULATION',
-                              style: TextStyle(
-                                  color: colorwhite,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
+                            GestureDetector(
+                              onTap: () => _showMultipleSelect(),
+                              child: const Icon(
+                                Icons.edit,
+                                size: 18,
+                                color: Color(0xFF707070),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Section : Date et heure souhaitées pour la livraison
+                        const Text(
+                          'Date et heure de livraison',
+                          style: TextStyle(
+                            fontFamily: 'Segoe UI',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorblack,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            // Champ de sélection de date
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  final date = await pickDate(dateTime);
+                                  if (date == null) return;
+                                  final newDateTime = DateTime(
+                                    date.year,
+                                    date.month,
+                                    date.day,
+                                    dateTime.hour,
+                                    dateTime.minute,
+                                  );
+                                  setState(() {
+                                    dateTime = newDateTime;
+                                    _date =
+                                        '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color(0xFFE0E0E0)),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          _date.isEmpty
+                                              ? 'Aujourd\'hui'
+                                              : _date,
+                                          style: const TextStyle(
+                                            fontFamily: 'Segoe UI',
+                                            fontSize: 16,
+                                            color: colorblack,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_up,
+                                        size: 20,
+                                        color: Color(0xFF707070),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            // Champ de sélection d'heure
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  final time = await pickTime(dateTime);
+                                  if (time == null) return;
+                                  final newDateTime = DateTime(
+                                    dateTime.year,
+                                    dateTime.month,
+                                    dateTime.day,
+                                    time.hour,
+                                    time.minute,
+                                  );
+                                  setState(() {
+                                    dateTime = newDateTime;
+                                    _heure =
+                                        '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color(0xFFE0E0E0)),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          _heure.isEmpty ? '16:30' : _heure,
+                                          style: const TextStyle(
+                                            fontFamily: 'Segoe UI',
+                                            fontSize: 16,
+                                            color: colorblack,
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_up,
+                                        size: 20,
+                                        color: Color(0xFF707070),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Section : Informations complémentaires
+                        const Text(
+                          'Autre détails',
+                          style: TextStyle(
+                            fontFamily: 'Segoe UI',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorblack,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFFE0E0E0)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: TextFormField(
+                            controller: _autreController,
+                            minLines: 3,
+                            maxLines: 5,
+                            style: const TextStyle(
+                              fontFamily: 'Segoe UI',
+                              fontSize: 16,
+                              color: colorblack,
+                            ),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(16),
+                              hintText:
+                                  'Ajoutez des détails supplémentaires...',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Segoe UI',
+                                fontSize: 16,
+                                color: Color(0xFF707070),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            bottomSheet: Container(
+              color: colorfond,
+              width: MediaQuery.of(context).size.width,
+              child: InkWell(
+                // Validation du formulaire avant envoi
+                onTap: () {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                  if (_formKey.currentState!.validate()) {
+                    if (_date != '' &&
+                        _heure != '' &&
+                        _lieuController.text != '') {
+                      chargementAlert();
+                      recapitulationCommande();
+                    } else if (_date == '') {
+                      Fluttertoast.showToast(
+                        msg: 'Sélectionnez la date svp!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    } else if (_heure == '') {
+                      Fluttertoast.showToast(
+                        msg: 'Sélectionnez l\'heure svp!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'Sélectionnez le lieu svp!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }
+                  }
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  width: MediaQuery.of(context).size.width,
+                  height: 43,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color: colorYellow2,
+                  ),
+                  child: const Text(
+                    'ENVOYER LA COMMANDE',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: colorwhite,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
               ),
@@ -808,7 +592,7 @@ class _FormulaireCommandeMoiScreenState
           });
   }
 
-  // dialog
+  /// Affiche le sélecteur de date
   Future<DateTime?> pickDate(DateTime dateTime) => showDatePicker(
         context: context,
         initialDate: dateTime,
@@ -816,6 +600,7 @@ class _FormulaireCommandeMoiScreenState
         lastDate: DateTime(dateTime.year, dateTime.month + 1, dateTime.day),
       );
 
+  /// Affiche le sélecteur d'heure
   Future<TimeOfDay?> pickTime(DateTime dateTime) => showTimePicker(
         context: context,
         initialTime: TimeOfDay(
@@ -823,4 +608,44 @@ class _FormulaireCommandeMoiScreenState
           minute: dateTime.minute,
         ),
       );
+
+  /// Affiche le dialogue de modification du numéro de téléphone
+  /// TODO: Sauvegarder le nouveau numéro via API après modification
+  /// En attente d'endpoint : PUT /api/user/phone
+  void _showEditPhoneDialog() {
+    final TextEditingController phoneController =
+        TextEditingController(text: _userPhoneNumber);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Modifier le numéro'),
+          content: TextField(
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+            decoration: const InputDecoration(
+              labelText: 'Numéro de téléphone',
+              hintText: 'Ex: +225 07 59 85 45',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _userPhoneNumber = _formatPhoneNumber(phoneController.text);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('Sauvegarder'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
